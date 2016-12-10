@@ -10,34 +10,40 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var stackView: UIStackView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let apiClient = ResourceAPIClient()
-//        apiClient.fetchResource(resource: ResourceType.Movie(.Details(id: 100)), class: Movie.self) { result in
-//            switch result {
-//            case .Success(let movie):
-//                apiClient.fetchResource(resource: ResourceType.Movie(.Credits(id: 100)), class: Credits.self) { result in
-//                    switch result {
-//                    case .Success(let credits):
-//                        print("\(movie)")
-//                        print("Credits: \(credits)")
-//                    case .Failure(let error):
-//                        print("\(error.localizedDescription)")
-//                    }
-//                }
-//                
-//                    
-//            case .Failure(let error):
-//                print("\(error.localizedDescription)")
-//            }
-//        }
-        apiClient.fetchResource(resource: ResourceType.Configuration, class: Configuration.self) { result in
-            switch result {
-            case .Success(let config):
-                print("\(config)")
-            case .Failure(let error):
-                print("\(error.localizedDescription)")
+        let apiClient =  ResourceAPIClient()
+        apiClient.fetchPages(resourceType: ResourceType.Movie(.Popular(pages: 2)), resourceClass: Movie.self) { movies in
+            apiClient.fetchResource(resource: ResourceType.Configuration, resourceClass: Configuration.self) { result in
+                switch result {
+                case .Success(let configuration):
+                    for movie in movies {
+                        apiClient.fetchResource(resource: ResourceType.Movie(.Images(id: movie.id)), resourceClass: Image.self) { result in
+                            switch result {
+                            case .Success(let image):
+                                print("Images of: \(movie.title.uppercased()):")
+                                if let posters = image.posters {
+                                    for poster in posters {
+                                        print("\(configuration.images.base_url+configuration.images.poster_sizes[1]+poster.file_path)")
+                                    }
+                                }
+                            case .Failure(let error as NSError):
+                                switch error.code {
+                                case APIError.TooManyRequests.rawValue:
+                                    print("ViewController handler: Too many requests, will sleep 1 second...")
+                                    
+                                default:
+                                    print("fetchPages can't handle error: \(error.localizedDescription)")
+                                }
+                            default: break
+                            }
+                        }
+                    }
+                case .Failure(let error):
+                    print("\(error.localizedDescription)")
+                }
             }
         }
     }

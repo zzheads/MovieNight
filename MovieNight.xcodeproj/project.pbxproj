@@ -53,7 +53,9 @@
 		A628CCB21DFC01920008577A /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCB11DFC01920008577A /* Configuration.swift */; };
 		A628CCB51DFC05BB0008577A /* StringArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCB41DFC05BB0008577A /* StringArrayExtension.swift */; };
 		A628CCBD1DFC149C0008577A /* Timezone.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCBC1DFC149C0008577A /* Timezone.swift */; };
-		A628CCBF1DFC153F0008577A /* Timezones.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCBE1DFC153F0008577A /* Timezones.swift */; };
+		A628CCC21DFC2BBC0008577A /* Jobs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCC11DFC2BBC0008577A /* Jobs.swift */; };
+		A628CCC41DFC2C480008577A /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCC31DFC2C480008577A /* Job.swift */; };
+		A628CCC71DFC37970008577A /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCC61DFC37970008577A /* Page.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -105,7 +107,9 @@
 		A628CCB11DFC01920008577A /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		A628CCB41DFC05BB0008577A /* StringArrayExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringArrayExtension.swift; sourceTree = "<group>"; };
 		A628CCBC1DFC149C0008577A /* Timezone.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timezone.swift; sourceTree = "<group>"; };
-		A628CCBE1DFC153F0008577A /* Timezones.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timezones.swift; sourceTree = "<group>"; };
+		A628CCC11DFC2BBC0008577A /* Jobs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jobs.swift; sourceTree = "<group>"; };
+		A628CCC31DFC2C480008577A /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
+		A628CCC61DFC37970008577A /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,7 +218,9 @@
 		A628CC8B1DFAC1070008577A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A628CCC51DFC37890008577A /* Page */,
 				A628CC8C1DFAC1160008577A /* Resource.swift */,
+				A628CCC01DFC2BA80008577A /* Jobs */,
 				A628CCBA1DFC14360008577A /* Person */,
 				A628CCB91DFC14270008577A /* Images */,
 				A628CCB81DFC13FB0008577A /* Collection */,
@@ -298,9 +304,25 @@
 			isa = PBXGroup;
 			children = (
 				A628CCBC1DFC149C0008577A /* Timezone.swift */,
-				A628CCBE1DFC153F0008577A /* Timezones.swift */,
 			);
 			name = Timezone;
+			sourceTree = "<group>";
+		};
+		A628CCC01DFC2BA80008577A /* Jobs */ = {
+			isa = PBXGroup;
+			children = (
+				A628CCC11DFC2BBC0008577A /* Jobs.swift */,
+				A628CCC31DFC2C480008577A /* Job.swift */,
+			);
+			name = Jobs;
+			sourceTree = "<group>";
+		};
+		A628CCC51DFC37890008577A /* Page */ = {
+			isa = PBXGroup;
+			children = (
+				A628CCC61DFC37970008577A /* Page.swift */,
+			);
+			name = Page;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -412,11 +434,13 @@
 				A628CC4D1DFAB1FA0008577A /* AppDelegate.swift in Sources */,
 				A628CCAB1DFBF94C0008577A /* Person.swift in Sources */,
 				A628CCAD1DFBFE4F0008577A /* PersonImage.swift in Sources */,
+				A628CCC41DFC2C480008577A /* Job.swift in Sources */,
 				A628CC851DFABDEC0008577A /* APIClient.swift in Sources */,
 				A628CC8A1DFABED50008577A /* ResourceAPIClient.swift in Sources */,
+				A628CCC71DFC37970008577A /* Page.swift in Sources */,
 				A628CCA51DFB072C0008577A /* Keywords.swift in Sources */,
+				A628CCC21DFC2BBC0008577A /* Jobs.swift in Sources */,
 				A628CC9D1DFAE6DB0008577A /* Credits.swift in Sources */,
-				A628CCBF1DFC153F0008577A /* Timezones.swift in Sources */,
 				A628CCA91DFBF7360008577A /* Image.swift in Sources */,
 				A628CCA71DFBF5C10008577A /* Pic.swift in Sources */,
 				A628CC911DFAC2800008577A /* Genre.swift in Sources */,

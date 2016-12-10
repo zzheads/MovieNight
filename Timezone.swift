@@ -8,4 +8,29 @@
 
 import Foundation
 
-typealias Timezone = [String: [String]]
+struct Timezone: JSONDecodable {
+    let key: String
+    var values: [String] = []
+    
+    init?(JSON: JSON) {
+        guard
+            let key = JSON.keys.first
+            else {
+                return nil
+        }
+        self.key = key
+        self.values = JSON[key] as! [String]
+    }
+}
+
+extension Sequence where Iterator.Element == Timezone {
+    var forPrint: String {
+        var description = "Timezones(\(self.underestimatedCount)):\n"
+        var count = 1
+        for element in self {
+            description += "\(count). [\(element.key)]: \(element.values.toString)"
+            count += 1
+        }
+        return description
+    }
+}
