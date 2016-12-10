@@ -12,14 +12,35 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let apiClient = ResourceAPIClient()
+//        apiClient.fetchResource(resource: ResourceType.Movie(.Details(id: 100)), class: Movie.self) { result in
+//            switch result {
+//            case .Success(let movie):
+//                apiClient.fetchResource(resource: ResourceType.Movie(.Credits(id: 100)), class: Credits.self) { result in
+//                    switch result {
+//                    case .Success(let credits):
+//                        print("\(movie)")
+//                        print("Credits: \(credits)")
+//                    case .Failure(let error):
+//                        print("\(error.localizedDescription)")
+//                    }
+//                }
+//                
+//                    
+//            case .Failure(let error):
+//                print("\(error.localizedDescription)")
+//            }
+//        }
+        apiClient.fetchResource(resource: ResourceType.Configuration, class: Configuration.self) { result in
+            switch result {
+            case .Success(let config):
+                print("\(config)")
+            case .Failure(let error):
+                print("\(error.localizedDescription)")
+            }
+        }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 
 }
 
