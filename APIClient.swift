@@ -10,8 +10,6 @@ import Foundation
 
 public let ZZHNetworkingErrorDomain = "com.zzheads.MovieNight.NetworkingError"
 public let MissingHTTPResponseError: Int = 10
-public let UnexpectedResponseError: Int = 20
-public let TooManyRequestsError: Int = 30
 
 typealias JSON = [String: AnyObject]
 typealias JSONArray = [AnyObject]
@@ -76,13 +74,13 @@ extension APIClient {
                     }
                     
                 default:
-                    if let errorCode = APIError(rawValue: HTTPResponse.statusCode) {
+                    if let errorCode = HTTPStatusCodeError(rawValue: HTTPResponse.statusCode) {
                         let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString(errorCode.description, comment: "")]
                         let error = NSError(domain: ZZHNetworkingErrorDomain, code: errorCode.rawValue, userInfo: userInfo)
                         completion(nil, HTTPResponse, error)
                     } else {
-                        let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("Unexpected Response error", comment: "")]
-                        let error = NSError(domain: ZZHNetworkingErrorDomain, code: UnexpectedResponseError, userInfo: userInfo)
+                        let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString(HTTPStatusCodeError.UnknownHTTPStatusCode.description, comment: "")]
+                        let error = NSError(domain: ZZHNetworkingErrorDomain, code: HTTPStatusCodeError.UnknownHTTPStatusCode.rawValue, userInfo: userInfo)
                         completion(nil, HTTPResponse, error)
                     }
                     return
@@ -97,9 +95,7 @@ extension APIClient {
         let task = session.dataTask(with: request) { data, response, error in
             //print("Request in JSONTask: \(request)")
             guard let HTTPResponse = response as? HTTPURLResponse else {
-                let userInfo = [
-                    NSLocalizedDescriptionKey: NSLocalizedString("Missing HTTP Response", comment: "")
-                ]
+                let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("Missing HTTP Response", comment: "")]
                 let error = NSError(domain: ZZHNetworkingErrorDomain, code: MissingHTTPResponseError, userInfo: userInfo)
                 completion(nil, nil, error)
                 return
@@ -118,13 +114,13 @@ extension APIClient {
                         completion(nil, HTTPResponse, error)
                     }
                 default:
-                    if let errorCode = APIError(rawValue: HTTPResponse.statusCode) {
+                    if let errorCode = HTTPStatusCodeError(rawValue: HTTPResponse.statusCode) {
                         let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString(errorCode.description, comment: "")]
                         let error = NSError(domain: ZZHNetworkingErrorDomain, code: errorCode.rawValue, userInfo: userInfo)
                         completion(nil, HTTPResponse, error)
                     } else {
-                        let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString("Unexpected Response error", comment: "")]
-                        let error = NSError(domain: ZZHNetworkingErrorDomain, code: UnexpectedResponseError, userInfo: userInfo)
+                        let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString(HTTPStatusCodeError.UnknownHTTPStatusCode.description, comment: "")]
+                        let error = NSError(domain: ZZHNetworkingErrorDomain, code: HTTPStatusCodeError.UnknownHTTPStatusCode.rawValue, userInfo: userInfo)
                         completion(nil, HTTPResponse, error)
                     }
                     return
@@ -143,14 +139,15 @@ extension APIClient {
                     if let error = error {
                         completion(.Failure(error))
                     } else {
-                        completion(.Failure(APIError.RequestTimeout))
+                        completion(.Failure(HTTPStatusCodeError.UnknownHTTPStatusCode))
                     }
                     return
                 }
                 if let value = parse(json) {
                     completion(.Success(value))
                 } else {
-                    let error = NSError(domain: ZZHNetworkingErrorDomain, code: UnexpectedResponseError, userInfo: nil)
+                    let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString(HTTPStatusCodeError.UnknownHTTPStatusCode.description, comment: "")]
+                    let error = NSError(domain: ZZHNetworkingErrorDomain, code: HTTPStatusCodeError.UnknownHTTPStatusCode.rawValue, userInfo: userInfo)
                     completion(.Failure(error))
                 }
             }
@@ -166,7 +163,7 @@ extension APIClient {
                     if let error = error {
                         completion(.Failure(error))
                     } else {
-                        completion(.Failure(APIError.RequestTimeout))
+                        completion(.Failure(HTTPStatusCodeError.UnknownHTTPStatusCode))
                     }
                     return
                 }
@@ -179,7 +176,8 @@ extension APIClient {
                 if (!valuesArray.isEmpty) {
                     completion(.Success(valuesArray))
                 } else {
-                    let error = NSError(domain: ZZHNetworkingErrorDomain, code: UnexpectedResponseError, userInfo: nil)
+                    let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString(HTTPStatusCodeError.UnknownHTTPStatusCode.description, comment: "")]
+                    let error = NSError(domain: ZZHNetworkingErrorDomain, code: HTTPStatusCodeError.UnknownHTTPStatusCode.rawValue, userInfo: userInfo)
                     completion(.Failure(error))
                 }
             }
