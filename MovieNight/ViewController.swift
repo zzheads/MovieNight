@@ -31,7 +31,7 @@ class ViewController: UIViewController {
                                 }
                             case .Failure(let error as NSError):
                                 switch error.code {
-                                case APIError.TooManyRequests.rawValue:
+                                case HTTPStatusCodeError.TooManyRequests.rawValue:
                                     print("ViewController handler: Too many requests, will sleep 1 second...")
                                     
                                 default:
