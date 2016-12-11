@@ -15,35 +15,30 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let apiClient =  ResourceAPIClient()
-        apiClient.fetchPages(resourceType: ResourceType.Movie(.Popular(pages: 2)), resourceClass: Movie.self) { movies in
-            apiClient.fetchResource(resource: ResourceType.Configuration, resourceClass: Configuration.self) { result in
-                switch result {
-                case .Success(let configuration):
+        apiClient.fetchResource(resource: ResourceType.Configuration, resourceClass: Configuration.self) { result in
+            switch result {
+            case .Success(let config):
+                print(config)
+                apiClient.fetchPages(resourceType: ResourceType.Movie(.NowPlaying(pages: 1)), resourceClass: Movie.self) { movies in
                     for movie in movies {
                         apiClient.fetchResource(resource: ResourceType.Movie(.Images(id: movie.id)), resourceClass: Image.self) { result in
                             switch result {
                             case .Success(let image):
-                                print("Images of: \(movie.title.uppercased()):")
                                 if let posters = image.posters {
                                     for poster in posters {
-                                        print("\(configuration.images.base_url+configuration.images.poster_sizes[1]+poster.file_path)")
+                                        let path = config.images.base_url + config.images.poster_sizes.last! + poster.file_path
+                                        print("Posters of \(movie.title.uppercased()): \(path)")
                                     }
                                 }
-                            case .Failure(let error as NSError):
-                                switch error.code {
-                                case HTTPStatusCodeError.TooManyRequests.rawValue:
-                                    print("ViewController handler: Too many requests, will sleep 1 second...")
-                                    
-                                default:
-                                    print("fetchPages can't handle error: \(error.localizedDescription)")
-                                }
-                            default: break
+                            case .Failure(let error):
+                                print("\(error.localizedDescription)")
                             }
                         }
+                        
                     }
-                case .Failure(let error):
-                    print("\(error.localizedDescription)")
                 }
+            case .Failure(let error):
+                print("\(error.localizedDescription)")
             }
         }
     }

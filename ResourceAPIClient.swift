@@ -10,8 +10,6 @@ import Foundation
 
 enum ResourceType: Endpoint {
     
-    static let API_KEY = "c2bdc0def5bdb6efb985dfe31785e312"
-    
     enum MovieRequests {
         case Details(id: Int)
         case Credits(id: Int)
@@ -62,44 +60,100 @@ enum ResourceType: Endpoint {
     }
     
     var path: String {
+        var path: String
+        
         switch self {
         case .Movie(let req):
             switch req {
-            case .Details(let id): return "movie/\(id)?api_key=\(ResourceType.API_KEY)"
-            case .Credits(let id): return "movie/\(id)/credits?api_key=\(ResourceType.API_KEY)"
-            case .Keywords(let id): return "movie/\(id)/keywords?api_key=\(ResourceType.API_KEY)"
-            case .Images(let id): return "movie/\(id)/images?api_key=\(ResourceType.API_KEY)"
-            case .NowPlaying(let page): return "movie/now_playing?api_key=\(ResourceType.API_KEY)&page=\(page)"
-            case .Popular(let page): return "movie/popular?api_key=\(ResourceType.API_KEY)&page=\(page)"
-            case .TopRated(let page): return "movie/top_rated?api_key=\(ResourceType.API_KEY)&page=\(page)"
-            case .Upcoming(let page): return "movie/upcoming?api_key=\(ResourceType.API_KEY)&page=\(page)"
+            case .Details(let id): path = "movie/\(id)"
+            case .Credits(let id): path = "movie/\(id)/credits"
+            case .Keywords(let id): path = "movie/\(id)/keywords"
+            case .Images(let id): path = "movie/\(id)/images"
+            case .NowPlaying(_): path = "movie/now_playing"
+            case .Popular(_): path = "movie/popular"
+            case .TopRated(_): path = "movie/top_rated"
+            case .Upcoming(_): path = "movie/upcoming"
             }
         case .Collection(let req):
             switch req {
-            case .Details(let id): return "collection/\(id)?api_key=\(ResourceType.API_KEY)"
-            case .Images(let id): return "collection/\(id)/images?api_key=\(ResourceType.API_KEY)"
+            case .Details(let id): path = "collection/\(id)"
+            case .Images(let id): path = "collection/\(id)/images"
             }
         case .Person(let req):
             switch req {
-            case .Details(let id): return "person/\(id)?api_key=\(ResourceType.API_KEY)"
-            case .MovieCredits(let id): return "person/\(id)/movie_credits?api_key=\(ResourceType.API_KEY)"
-            case .TVCredits(let id): return "person/\(id)/tv_credits?api_key=\(ResourceType.API_KEY)"
-            case .CombainedCredits(let id): return "person/\(id)/combained_credits?api_key=\(ResourceType.API_KEY)"
-            case .Images(let id): return "person/\(id)/images?api_key=\(ResourceType.API_KEY)"
+            case .Details(let id): path = "person/\(id)"
+            case .MovieCredits(let id): path = "person/\(id)/movie_credits"
+            case .TVCredits(let id): path = "person/\(id)/tv_credits"
+            case .CombainedCredits(let id): path = "person/\(id)/combained_credits"
+            case .Images(let id): path = "person/\(id)/images"
             }
-        case .Configuration: return "configuration?api_key=\(ResourceType.API_KEY)"
-        case .Timezones: return "timezones/list?api_key=\(ResourceType.API_KEY)"
-        case .Jobs: return "job/list?api_key=\(ResourceType.API_KEY)"
+        case .Configuration: path = "configuration"
+        case .Timezones: path = "timezones/list"
+        case .Jobs: path = "job/list"
         case .Search(let req):
             switch req {
-            case .Collections(let query, let page): return "search/collection?api_key=\(ResourceType.API_KEY)&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)&page=\(page)"
-            case .Companies(let query, let page): return "search/company?api_key=\(ResourceType.API_KEY)&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)&page=\(page)"
-            case .Keywords(let query, let page): return "search/keyword?api_key=\(ResourceType.API_KEY)&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)&page=\(page)"
-            case .Movies(let query, let page): return "search/movie?api_key=\(ResourceType.API_KEY)&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)&page=\(page)"
-            case .MultiSearch(let query, let page): return "search/multi?api_key=\(ResourceType.API_KEY)&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)&page=\(page)"
-            case .People(let query, let page): return "search/person?api_key=\(ResourceType.API_KEY)&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)&page=\(page)"
-            case .TVShows(let query, let page): return "search/tv?api_key=\(ResourceType.API_KEY)&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!))&page=\(page)"
+            case .Collections(_): path = "search/collection"
+            case .Companies(_): path = "search/company"
+            case .Keywords(_): path = "search/keyword"
+            case .Movies(_): path = "search/movie"
+            case .MultiSearch(_): path = "search/multi"
+            case .People(_): path = "search/person"
+            case .TVShows(_): path = "search/tv"
             }
+        }
+        if let key = keyAdd {
+            path += "?api_key=\(key)"
+        }
+        if let query = queryAdd {
+            path += "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)"
+        }
+        if let page = pageAdd {
+            path += "&page=\(page)"
+        }
+        if let lang = langAdd {
+            path += "&language=\(lang)"
+        }
+        return path
+    }
+    
+    var keyAdd: String? {
+        return "c2bdc0def5bdb6efb985dfe31785e312"
+    }
+    
+    var langAdd: String? {
+        switch self {
+        case .Movie(let movieRequest):
+            switch movieRequest {
+            case .Images(_): return nil
+            default: break
+            }
+        default: break
+        }
+        return "ru-RU"
+    }
+
+    var queryAdd: String? {
+        switch self {
+        case .Search(let searchReq):
+            switch searchReq {
+            case .Collections(let query,_), .Companies(let query,_), .Keywords(let query,_), .Movies(let query,_), .MultiSearch(let query,_), .People(let query,_), .TVShows(let query,_): return query
+            }
+        default: return nil
+        }
+    }
+    
+    var pageAdd: Int? {
+        switch self {
+        case .Search(let searchReq):
+            switch searchReq {
+            case .Collections(_,let page), .Companies(_,let page), .Keywords(_,let page), .Movies(_,let page), .MultiSearch(_,let page), .People(_,let page), .TVShows(_,let page): return page
+            }
+        case .Movie(let movieReq):
+            switch movieReq {
+            case .NowPlaying(let page), .Popular(let page), .TopRated(let page), .Upcoming(let page): return page
+            default: return nil
+            }
+        default: return nil
         }
     }
     
