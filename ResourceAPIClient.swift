@@ -209,7 +209,7 @@ final class ResourceAPIClient: APIClient {
                 
                 case .Failure(let error as NSError):
                     switch error.code {
-                    case APIError.TooManyRequests.rawValue:
+                    case HTTPStatusCodeError.TooManyRequests.rawValue:
                         print("Too many requests, will sleep 1 second...")
                         sleep(1)
                         listPage(completion: completion)
