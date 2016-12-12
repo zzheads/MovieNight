@@ -9,26 +9,8 @@
 /* Begin PBXBuildFile section */
 		A628CC4D1DFAB1FA0008577A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CC4C1DFAB1FA0008577A /* AppDelegate.swift */; };
 		A628CC4F1DFAB1FA0008577A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CC4E1DFAB1FA0008577A /* ViewController.swift */; };
-		A628CC521DFAB1FA0008577A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A628CC501DFAB1FA0008577A /* Main.storyboard */; };
 		A628CC541DFAB1FA0008577A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A628CC531DFAB1FA0008577A /* Assets.xcassets */; };
 		A628CC571DFAB1FA0008577A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A628CC551DFAB1FA0008577A /* LaunchScreen.storyboard */; };
-		A628CC701DFAB2F60008577A /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC5F1DFAB2F60008577A /* appicon@2x.png */; };
-		A628CC711DFAB2F60008577A /* appicon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC601DFAB2F60008577A /* appicon@3x.png */; };
-		A628CC721DFAB2F60008577A /* bg-iphone4.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC611DFAB2F60008577A /* bg-iphone4.png */; };
-		A628CC731DFAB2F60008577A /* bg-iphone5.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC621DFAB2F60008577A /* bg-iphone5.png */; };
-		A628CC741DFAB2F60008577A /* bg-iphone6.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC631DFAB2F60008577A /* bg-iphone6.png */; };
-		A628CC751DFAB2F60008577A /* bg-iphone6plus.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC641DFAB2F60008577A /* bg-iphone6plus.png */; };
-		A628CC761DFAB2F60008577A /* bubble-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC651DFAB2F60008577A /* bubble-empty.png */; };
-		A628CC771DFAB2F60008577A /* bubble-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC661DFAB2F60008577A /* bubble-empty@2x.png */; };
-		A628CC781DFAB2F60008577A /* bubble-empty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC671DFAB2F60008577A /* bubble-empty@3x.png */; };
-		A628CC791DFAB2F60008577A /* bubble-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC681DFAB2F60008577A /* bubble-selected.png */; };
-		A628CC7A1DFAB2F60008577A /* bubble-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC691DFAB2F60008577A /* bubble-selected@2x.png */; };
-		A628CC7B1DFAB2F60008577A /* bubble-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC6A1DFAB2F60008577A /* bubble-selected@3x.png */; };
-		A628CC7C1DFAB2F60008577A /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC6B1DFAB2F60008577A /* iTunesArtwork.png */; };
-		A628CC7D1DFAB2F60008577A /* movie-night-ios-05.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC6C1DFAB2F60008577A /* movie-night-ios-05.png */; };
-		A628CC7E1DFAB2F60008577A /* movie-night-ios-06.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC6D1DFAB2F60008577A /* movie-night-ios-06.png */; };
-		A628CC7F1DFAB2F60008577A /* movie-night-ios-07.png in Resources */ = {isa = PBXBuildFile; fileRef = A628CC6E1DFAB2F60008577A /* movie-night-ios-07.png */; };
-		A628CC801DFAB2F60008577A /* movie-night-ios.ai in Resources */ = {isa = PBXBuildFile; fileRef = A628CC6F1DFAB2F60008577A /* movie-night-ios.ai */; };
 		A628CC851DFABDEC0008577A /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CC841DFABDEC0008577A /* APIClient.swift */; };
 		A628CC881DFABE110008577A /* HTTPStatusCodeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CC871DFABE110008577A /* HTTPStatusCodeError.swift */; };
 		A628CC8A1DFABED50008577A /* ResourceAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CC891DFABED50008577A /* ResourceAPIClient.swift */; };
@@ -56,33 +38,42 @@
 		A628CCC21DFC2BBC0008577A /* Jobs.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCC11DFC2BBC0008577A /* Jobs.swift */; };
 		A628CCC41DFC2C480008577A /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCC31DFC2C480008577A /* Job.swift */; };
 		A628CCC71DFC37970008577A /* Page.swift in Sources */ = {isa = PBXBuildFile; fileRef = A628CCC61DFC37970008577A /* Page.swift */; };
+		A64AB0401DFE97D30049BEA1 /* SelectWeightsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB03F1DFE97D30049BEA1 /* SelectWeightsController.swift */; };
+		A64AB0431DFE9D370049BEA1 /* Watcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB0421DFE9D370049BEA1 /* Watcher.swift */; };
+		A64AB0451DFE9D7C0049BEA1 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB0441DFE9D7C0049BEA1 /* Preferences.swift */; };
+		A64AB0471DFED1800049BEA1 /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB0461DFED1800049BEA1 /* AppColors.swift */; };
+		A64AB0681DFEDA850049BEA1 /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0521DFEDA850049BEA1 /* appicon.png */; };
+		A64AB0691DFEDA850049BEA1 /* appicon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0531DFEDA850049BEA1 /* appicon@2x.png */; };
+		A64AB06A1DFEDA850049BEA1 /* appicon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0541DFEDA850049BEA1 /* appicon@3x.png */; };
+		A64AB06B1DFEDA850049BEA1 /* bg-iphone4.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0551DFEDA850049BEA1 /* bg-iphone4.png */; };
+		A64AB06C1DFEDA850049BEA1 /* bg-iphone5.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0561DFEDA850049BEA1 /* bg-iphone5.png */; };
+		A64AB06D1DFEDA850049BEA1 /* bg-iphone6.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0571DFEDA850049BEA1 /* bg-iphone6.png */; };
+		A64AB06E1DFEDA850049BEA1 /* bg-iphone6plus.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0581DFEDA850049BEA1 /* bg-iphone6plus.png */; };
+		A64AB06F1DFEDA850049BEA1 /* bubble-empty.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0591DFEDA850049BEA1 /* bubble-empty.png */; };
+		A64AB0701DFEDA850049BEA1 /* bubble-empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB05A1DFEDA850049BEA1 /* bubble-empty@2x.png */; };
+		A64AB0711DFEDA850049BEA1 /* bubble-empty@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB05B1DFEDA850049BEA1 /* bubble-empty@3x.png */; };
+		A64AB0721DFEDA850049BEA1 /* bubble-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB05C1DFEDA850049BEA1 /* bubble-selected.png */; };
+		A64AB0731DFEDA850049BEA1 /* bubble-selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB05D1DFEDA850049BEA1 /* bubble-selected@2x.png */; };
+		A64AB0741DFEDA850049BEA1 /* bubble-selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB05E1DFEDA850049BEA1 /* bubble-selected@3x.png */; };
+		A64AB0751DFEDA850049BEA1 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = A64AB05F1DFEDA850049BEA1 /* Contents.json */; };
+		A64AB0761DFEDA850049BEA1 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0601DFEDA850049BEA1 /* iTunesArtwork.png */; };
+		A64AB0771DFEDA850049BEA1 /* Movie_industry_icons_Line-17-512.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0611DFEDA850049BEA1 /* Movie_industry_icons_Line-17-512.png */; };
+		A64AB0781DFEDA850049BEA1 /* movie-night-ios-05.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0621DFEDA850049BEA1 /* movie-night-ios-05.png */; };
+		A64AB0791DFEDA850049BEA1 /* movie-night-ios-06.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0631DFEDA850049BEA1 /* movie-night-ios-06.png */; };
+		A64AB07A1DFEDA850049BEA1 /* movie-night-ios-07.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0641DFEDA850049BEA1 /* movie-night-ios-07.png */; };
+		A64AB07B1DFEDA850049BEA1 /* movie-night-ios.ai in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0651DFEDA850049BEA1 /* movie-night-ios.ai */; };
+		A64AB07C1DFEDA850049BEA1 /* play_movie_3-512.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0661DFEDA850049BEA1 /* play_movie_3-512.png */; };
+		A64AB07D1DFEDA850049BEA1 /* popcorn.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0671DFEDA850049BEA1 /* popcorn.png */; };
+		A664BF551DFD6A69003F8231 /* ExtensionUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A664BF541DFD6A69003F8231 /* ExtensionUIImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A628CC491DFAB1FA0008577A /* MovieNight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieNight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A628CC4C1DFAB1FA0008577A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A628CC4E1DFAB1FA0008577A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		A628CC511DFAB1FA0008577A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A628CC531DFAB1FA0008577A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A628CC561DFAB1FA0008577A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A628CC581DFAB1FA0008577A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A628CC5F1DFAB2F60008577A /* appicon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon@2x.png"; sourceTree = "<group>"; };
-		A628CC601DFAB2F60008577A /* appicon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appicon@3x.png"; sourceTree = "<group>"; };
-		A628CC611DFAB2F60008577A /* bg-iphone4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-iphone4.png"; sourceTree = "<group>"; };
-		A628CC621DFAB2F60008577A /* bg-iphone5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-iphone5.png"; sourceTree = "<group>"; };
-		A628CC631DFAB2F60008577A /* bg-iphone6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-iphone6.png"; sourceTree = "<group>"; };
-		A628CC641DFAB2F60008577A /* bg-iphone6plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg-iphone6plus.png"; sourceTree = "<group>"; };
-		A628CC651DFAB2F60008577A /* bubble-empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-empty.png"; sourceTree = "<group>"; };
-		A628CC661DFAB2F60008577A /* bubble-empty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-empty@2x.png"; sourceTree = "<group>"; };
-		A628CC671DFAB2F60008577A /* bubble-empty@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-empty@3x.png"; sourceTree = "<group>"; };
-		A628CC681DFAB2F60008577A /* bubble-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-selected.png"; sourceTree = "<group>"; };
-		A628CC691DFAB2F60008577A /* bubble-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-selected@2x.png"; sourceTree = "<group>"; };
-		A628CC6A1DFAB2F60008577A /* bubble-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubble-selected@3x.png"; sourceTree = "<group>"; };
-		A628CC6B1DFAB2F60008577A /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
-		A628CC6C1DFAB2F60008577A /* movie-night-ios-05.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "movie-night-ios-05.png"; sourceTree = "<group>"; };
-		A628CC6D1DFAB2F60008577A /* movie-night-ios-06.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "movie-night-ios-06.png"; sourceTree = "<group>"; };
-		A628CC6E1DFAB2F60008577A /* movie-night-ios-07.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "movie-night-ios-07.png"; sourceTree = "<group>"; };
-		A628CC6F1DFAB2F60008577A /* movie-night-ios.ai */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "movie-night-ios.ai"; sourceTree = "<group>"; };
 		A628CC841DFABDEC0008577A /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		A628CC871DFABE110008577A /* HTTPStatusCodeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPStatusCodeError.swift; sourceTree = "<group>"; };
 		A628CC891DFABED50008577A /* ResourceAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceAPIClient.swift; sourceTree = "<group>"; };
@@ -110,6 +101,33 @@
 		A628CCC11DFC2BBC0008577A /* Jobs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Jobs.swift; sourceTree = "<group>"; };
 		A628CCC31DFC2C480008577A /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Job.swift; sourceTree = "<group>"; };
 		A628CCC61DFC37970008577A /* Page.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Page.swift; sourceTree = "<group>"; };
+		A64AB03F1DFE97D30049BEA1 /* SelectWeightsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectWeightsController.swift; path = ../SelectWeightsController.swift; sourceTree = "<group>"; };
+		A64AB0421DFE9D370049BEA1 /* Watcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Watcher.swift; sourceTree = "<group>"; };
+		A64AB0441DFE9D7C0049BEA1 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		A64AB0461DFED1800049BEA1 /* AppColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppColors.swift; sourceTree = "<group>"; };
+		A64AB0521DFEDA850049BEA1 /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appicon.png; path = MovieNight/Assets.xcassets/appicon.png; sourceTree = "<group>"; };
+		A64AB0531DFEDA850049BEA1 /* appicon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon@2x.png"; path = "MovieNight/Assets.xcassets/appicon@2x.png"; sourceTree = "<group>"; };
+		A64AB0541DFEDA850049BEA1 /* appicon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "appicon@3x.png"; path = "MovieNight/Assets.xcassets/appicon@3x.png"; sourceTree = "<group>"; };
+		A64AB0551DFEDA850049BEA1 /* bg-iphone4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-iphone4.png"; path = "MovieNight/Assets.xcassets/bg-iphone4.png"; sourceTree = "<group>"; };
+		A64AB0561DFEDA850049BEA1 /* bg-iphone5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-iphone5.png"; path = "MovieNight/Assets.xcassets/bg-iphone5.png"; sourceTree = "<group>"; };
+		A64AB0571DFEDA850049BEA1 /* bg-iphone6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-iphone6.png"; path = "MovieNight/Assets.xcassets/bg-iphone6.png"; sourceTree = "<group>"; };
+		A64AB0581DFEDA850049BEA1 /* bg-iphone6plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-iphone6plus.png"; path = "MovieNight/Assets.xcassets/bg-iphone6plus.png"; sourceTree = "<group>"; };
+		A64AB0591DFEDA850049BEA1 /* bubble-empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-empty.png"; path = "MovieNight/Assets.xcassets/bubble-empty.png"; sourceTree = "<group>"; };
+		A64AB05A1DFEDA850049BEA1 /* bubble-empty@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-empty@2x.png"; path = "MovieNight/Assets.xcassets/bubble-empty@2x.png"; sourceTree = "<group>"; };
+		A64AB05B1DFEDA850049BEA1 /* bubble-empty@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-empty@3x.png"; path = "MovieNight/Assets.xcassets/bubble-empty@3x.png"; sourceTree = "<group>"; };
+		A64AB05C1DFEDA850049BEA1 /* bubble-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-selected.png"; path = "MovieNight/Assets.xcassets/bubble-selected.png"; sourceTree = "<group>"; };
+		A64AB05D1DFEDA850049BEA1 /* bubble-selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-selected@2x.png"; path = "MovieNight/Assets.xcassets/bubble-selected@2x.png"; sourceTree = "<group>"; };
+		A64AB05E1DFEDA850049BEA1 /* bubble-selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-selected@3x.png"; path = "MovieNight/Assets.xcassets/bubble-selected@3x.png"; sourceTree = "<group>"; };
+		A64AB05F1DFEDA850049BEA1 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = Contents.json; path = MovieNight/Assets.xcassets/Contents.json; sourceTree = "<group>"; };
+		A64AB0601DFEDA850049BEA1 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iTunesArtwork.png; path = MovieNight/Assets.xcassets/iTunesArtwork.png; sourceTree = "<group>"; };
+		A64AB0611DFEDA850049BEA1 /* Movie_industry_icons_Line-17-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Movie_industry_icons_Line-17-512.png"; path = "MovieNight/Assets.xcassets/Movie_industry_icons_Line-17-512.png"; sourceTree = "<group>"; };
+		A64AB0621DFEDA850049BEA1 /* movie-night-ios-05.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "movie-night-ios-05.png"; path = "MovieNight/Assets.xcassets/movie-night-ios-05.png"; sourceTree = "<group>"; };
+		A64AB0631DFEDA850049BEA1 /* movie-night-ios-06.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "movie-night-ios-06.png"; path = "MovieNight/Assets.xcassets/movie-night-ios-06.png"; sourceTree = "<group>"; };
+		A64AB0641DFEDA850049BEA1 /* movie-night-ios-07.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "movie-night-ios-07.png"; path = "MovieNight/Assets.xcassets/movie-night-ios-07.png"; sourceTree = "<group>"; };
+		A64AB0651DFEDA850049BEA1 /* movie-night-ios.ai */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "movie-night-ios.ai"; path = "MovieNight/Assets.xcassets/movie-night-ios.ai"; sourceTree = "<group>"; };
+		A64AB0661DFEDA850049BEA1 /* play_movie_3-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "play_movie_3-512.png"; path = "MovieNight/Assets.xcassets/play_movie_3-512.png"; sourceTree = "<group>"; };
+		A64AB0671DFEDA850049BEA1 /* popcorn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popcorn.png; path = MovieNight/Assets.xcassets/popcorn.png; sourceTree = "<group>"; };
+		A664BF541DFD6A69003F8231 /* ExtensionUIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionUIImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,8 +144,6 @@
 		A628CC401DFAB1FA0008577A = {
 			isa = PBXGroup;
 			children = (
-				A628CC821DFABDBB0008577A /* Model */,
-				A628CC811DFAB3070008577A /* Resources */,
 				A628CC4B1DFAB1FA0008577A /* MovieNight */,
 				A628CC4A1DFAB1FA0008577A /* Products */,
 			);
@@ -144,9 +160,12 @@
 		A628CC4B1DFAB1FA0008577A /* MovieNight */ = {
 			isa = PBXGroup;
 			children = (
+				A628CC821DFABDBB0008577A /* Model */,
 				A628CC4C1DFAB1FA0008577A /* AppDelegate.swift */,
 				A628CC4E1DFAB1FA0008577A /* ViewController.swift */,
-				A628CC501DFAB1FA0008577A /* Main.storyboard */,
+				A64AB03F1DFE97D30049BEA1 /* SelectWeightsController.swift */,
+				A628CCB31DFC05A60008577A /* Helpers */,
+				A628CC811DFAB3070008577A /* Resources */,
 				A628CC531DFAB1FA0008577A /* Assets.xcassets */,
 				A628CC551DFAB1FA0008577A /* LaunchScreen.storyboard */,
 				A628CC581DFAB1FA0008577A /* Info.plist */,
@@ -154,48 +173,46 @@
 			path = MovieNight;
 			sourceTree = "<group>";
 		};
-		A628CC5E1DFAB2F60008577A /* MovieNight-Icons-Images */ = {
-			isa = PBXGroup;
-			children = (
-				A628CC5F1DFAB2F60008577A /* appicon@2x.png */,
-				A628CC601DFAB2F60008577A /* appicon@3x.png */,
-				A628CC611DFAB2F60008577A /* bg-iphone4.png */,
-				A628CC621DFAB2F60008577A /* bg-iphone5.png */,
-				A628CC631DFAB2F60008577A /* bg-iphone6.png */,
-				A628CC641DFAB2F60008577A /* bg-iphone6plus.png */,
-				A628CC651DFAB2F60008577A /* bubble-empty.png */,
-				A628CC661DFAB2F60008577A /* bubble-empty@2x.png */,
-				A628CC671DFAB2F60008577A /* bubble-empty@3x.png */,
-				A628CC681DFAB2F60008577A /* bubble-selected.png */,
-				A628CC691DFAB2F60008577A /* bubble-selected@2x.png */,
-				A628CC6A1DFAB2F60008577A /* bubble-selected@3x.png */,
-				A628CC6B1DFAB2F60008577A /* iTunesArtwork.png */,
-				A628CC6C1DFAB2F60008577A /* movie-night-ios-05.png */,
-				A628CC6D1DFAB2F60008577A /* movie-night-ios-06.png */,
-				A628CC6E1DFAB2F60008577A /* movie-night-ios-07.png */,
-				A628CC6F1DFAB2F60008577A /* movie-night-ios.ai */,
-			);
-			name = "MovieNight-Icons-Images";
-			path = "MovieNight/Assets.xcassets/MovieNight-Icons-Images";
-			sourceTree = "<group>";
-		};
 		A628CC811DFAB3070008577A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A628CC5E1DFAB2F60008577A /* MovieNight-Icons-Images */,
+				A64AB0521DFEDA850049BEA1 /* appicon.png */,
+				A64AB0531DFEDA850049BEA1 /* appicon@2x.png */,
+				A64AB0541DFEDA850049BEA1 /* appicon@3x.png */,
+				A64AB0551DFEDA850049BEA1 /* bg-iphone4.png */,
+				A64AB0561DFEDA850049BEA1 /* bg-iphone5.png */,
+				A64AB0571DFEDA850049BEA1 /* bg-iphone6.png */,
+				A64AB0581DFEDA850049BEA1 /* bg-iphone6plus.png */,
+				A64AB0591DFEDA850049BEA1 /* bubble-empty.png */,
+				A64AB05A1DFEDA850049BEA1 /* bubble-empty@2x.png */,
+				A64AB05B1DFEDA850049BEA1 /* bubble-empty@3x.png */,
+				A64AB05C1DFEDA850049BEA1 /* bubble-selected.png */,
+				A64AB05D1DFEDA850049BEA1 /* bubble-selected@2x.png */,
+				A64AB05E1DFEDA850049BEA1 /* bubble-selected@3x.png */,
+				A64AB05F1DFEDA850049BEA1 /* Contents.json */,
+				A64AB0601DFEDA850049BEA1 /* iTunesArtwork.png */,
+				A64AB0611DFEDA850049BEA1 /* Movie_industry_icons_Line-17-512.png */,
+				A64AB0621DFEDA850049BEA1 /* movie-night-ios-05.png */,
+				A64AB0631DFEDA850049BEA1 /* movie-night-ios-06.png */,
+				A64AB0641DFEDA850049BEA1 /* movie-night-ios-07.png */,
+				A64AB0651DFEDA850049BEA1 /* movie-night-ios.ai */,
+				A64AB0661DFEDA850049BEA1 /* play_movie_3-512.png */,
+				A64AB0671DFEDA850049BEA1 /* popcorn.png */,
 			);
 			name = Resources;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		A628CC821DFABDBB0008577A /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				A628CCB31DFC05A60008577A /* Helpers */,
+				A64AB0411DFE9D240049BEA1 /* Watcher */,
 				A628CC8B1DFAC1070008577A /* Resources */,
 				A628CC861DFABE020008577A /* Errors */,
 				A628CC831DFABDC60008577A /* API */,
 			);
 			name = Model;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		A628CC831DFABDC60008577A /* API */ = {
@@ -218,8 +235,8 @@
 		A628CC8B1DFAC1070008577A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A628CCC51DFC37890008577A /* Page */,
 				A628CC8C1DFAC1160008577A /* Resource.swift */,
+				A628CCC51DFC37890008577A /* Page */,
 				A628CCC01DFC2BA80008577A /* Jobs */,
 				A628CCBA1DFC14360008577A /* Person */,
 				A628CCB91DFC14270008577A /* Images */,
@@ -245,8 +262,11 @@
 			isa = PBXGroup;
 			children = (
 				A628CCB41DFC05BB0008577A /* StringArrayExtension.swift */,
+				A664BF541DFD6A69003F8231 /* ExtensionUIImageView.swift */,
+				A64AB0461DFED1800049BEA1 /* AppColors.swift */,
 			);
 			name = Helpers;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		A628CCB61DFC13BD0008577A /* Movie */ = {
@@ -325,6 +345,15 @@
 			name = Page;
 			sourceTree = "<group>";
 		};
+		A64AB0411DFE9D240049BEA1 /* Watcher */ = {
+			isa = PBXGroup;
+			children = (
+				A64AB0421DFE9D370049BEA1 /* Watcher.swift */,
+				A64AB0441DFE9D7C0049BEA1 /* Preferences.swift */,
+			);
+			name = Watcher;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -385,26 +414,30 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A628CC741DFAB2F60008577A /* bg-iphone6.png in Resources */,
+				A64AB06D1DFEDA850049BEA1 /* bg-iphone6.png in Resources */,
+				A64AB0761DFEDA850049BEA1 /* iTunesArtwork.png in Resources */,
+				A64AB0781DFEDA850049BEA1 /* movie-night-ios-05.png in Resources */,
+				A64AB0791DFEDA850049BEA1 /* movie-night-ios-06.png in Resources */,
 				A628CC571DFAB1FA0008577A /* LaunchScreen.storyboard in Resources */,
-				A628CC701DFAB2F60008577A /* appicon@2x.png in Resources */,
-				A628CC7D1DFAB2F60008577A /* movie-night-ios-05.png in Resources */,
-				A628CC761DFAB2F60008577A /* bubble-empty.png in Resources */,
-				A628CC751DFAB2F60008577A /* bg-iphone6plus.png in Resources */,
-				A628CC781DFAB2F60008577A /* bubble-empty@3x.png in Resources */,
-				A628CC7C1DFAB2F60008577A /* iTunesArtwork.png in Resources */,
-				A628CC721DFAB2F60008577A /* bg-iphone4.png in Resources */,
-				A628CC801DFAB2F60008577A /* movie-night-ios.ai in Resources */,
+				A64AB0691DFEDA850049BEA1 /* appicon@2x.png in Resources */,
+				A64AB0751DFEDA850049BEA1 /* Contents.json in Resources */,
+				A64AB07A1DFEDA850049BEA1 /* movie-night-ios-07.png in Resources */,
+				A64AB06F1DFEDA850049BEA1 /* bubble-empty.png in Resources */,
+				A64AB0771DFEDA850049BEA1 /* Movie_industry_icons_Line-17-512.png in Resources */,
+				A64AB06E1DFEDA850049BEA1 /* bg-iphone6plus.png in Resources */,
+				A64AB0711DFEDA850049BEA1 /* bubble-empty@3x.png in Resources */,
+				A64AB06B1DFEDA850049BEA1 /* bg-iphone4.png in Resources */,
+				A64AB0681DFEDA850049BEA1 /* appicon.png in Resources */,
+				A64AB0721DFEDA850049BEA1 /* bubble-selected.png in Resources */,
+				A64AB07D1DFEDA850049BEA1 /* popcorn.png in Resources */,
+				A64AB06C1DFEDA850049BEA1 /* bg-iphone5.png in Resources */,
 				A628CC541DFAB1FA0008577A /* Assets.xcassets in Resources */,
-				A628CC791DFAB2F60008577A /* bubble-selected.png in Resources */,
-				A628CC731DFAB2F60008577A /* bg-iphone5.png in Resources */,
-				A628CC521DFAB1FA0008577A /* Main.storyboard in Resources */,
-				A628CC7A1DFAB2F60008577A /* bubble-selected@2x.png in Resources */,
-				A628CC771DFAB2F60008577A /* bubble-empty@2x.png in Resources */,
-				A628CC711DFAB2F60008577A /* appicon@3x.png in Resources */,
-				A628CC7F1DFAB2F60008577A /* movie-night-ios-07.png in Resources */,
-				A628CC7B1DFAB2F60008577A /* bubble-selected@3x.png in Resources */,
-				A628CC7E1DFAB2F60008577A /* movie-night-ios-06.png in Resources */,
+				A64AB0731DFEDA850049BEA1 /* bubble-selected@2x.png in Resources */,
+				A64AB0701DFEDA850049BEA1 /* bubble-empty@2x.png in Resources */,
+				A64AB07C1DFEDA850049BEA1 /* play_movie_3-512.png in Resources */,
+				A64AB06A1DFEDA850049BEA1 /* appicon@3x.png in Resources */,
+				A64AB0741DFEDA850049BEA1 /* bubble-selected@3x.png in Resources */,
+				A64AB07B1DFEDA850049BEA1 /* movie-night-ios.ai in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,8 +458,10 @@
 				A628CC991DFAC9AC0008577A /* MovieHead.swift in Sources */,
 				A628CCBD1DFC149C0008577A /* Timezone.swift in Sources */,
 				A628CC881DFABE110008577A /* HTTPStatusCodeError.swift in Sources */,
+				A664BF551DFD6A69003F8231 /* ExtensionUIImageView.swift in Sources */,
 				A628CCA11DFAE82F0008577A /* Crew.swift in Sources */,
 				A628CC9B1DFACD1B0008577A /* Collection.swift in Sources */,
+				A64AB0471DFED1800049BEA1 /* AppColors.swift in Sources */,
 				A628CCB51DFC05BB0008577A /* StringArrayExtension.swift in Sources */,
 				A628CC9F1DFAE6E60008577A /* Cast.swift in Sources */,
 				A628CC8D1DFAC1160008577A /* Resource.swift in Sources */,
@@ -436,11 +471,14 @@
 				A628CCAD1DFBFE4F0008577A /* PersonImage.swift in Sources */,
 				A628CCC41DFC2C480008577A /* Job.swift in Sources */,
 				A628CC851DFABDEC0008577A /* APIClient.swift in Sources */,
+				A64AB0431DFE9D370049BEA1 /* Watcher.swift in Sources */,
+				A64AB0401DFE97D30049BEA1 /* SelectWeightsController.swift in Sources */,
 				A628CC8A1DFABED50008577A /* ResourceAPIClient.swift in Sources */,
 				A628CCC71DFC37970008577A /* Page.swift in Sources */,
 				A628CCA51DFB072C0008577A /* Keywords.swift in Sources */,
 				A628CCC21DFC2BBC0008577A /* Jobs.swift in Sources */,
 				A628CC9D1DFAE6DB0008577A /* Credits.swift in Sources */,
+				A64AB0451DFE9D7C0049BEA1 /* Preferences.swift in Sources */,
 				A628CCA91DFBF7360008577A /* Image.swift in Sources */,
 				A628CCA71DFBF5C10008577A /* Pic.swift in Sources */,
 				A628CC911DFAC2800008577A /* Genre.swift in Sources */,
@@ -450,14 +488,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		A628CC501DFAB1FA0008577A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A628CC511DFAB1FA0008577A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		A628CC551DFAB1FA0008577A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -565,9 +595,9 @@
 		A628CC5C1DFAB1FA0008577A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = RS93W547X8;
 				INFOPLIST_FILE = MovieNight/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zzheads.MovieNight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -579,9 +609,9 @@
 		A628CC5D1DFAB1FA0008577A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = RS93W547X8;
 				INFOPLIST_FILE = MovieNight/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zzheads.MovieNight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
