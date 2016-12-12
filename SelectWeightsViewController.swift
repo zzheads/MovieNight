@@ -11,10 +11,9 @@ import UIKit
 fileprivate let SLIDER_MAX: Float = 100.0
 fileprivate let NUMBER_SLIDERS = 4
 
-class SelectWeightsController: UIViewController {
+class SelectWeightsViewController: UIViewController {
     
-    let delegate: (Preferences, Int) -> Void
-    let number: Int
+    let delegateModifyPrefs: (Weights?, [Int]?, [Int]?) -> Void
     
     lazy var backgroundImage: UIImageView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
@@ -33,9 +32,8 @@ class SelectWeightsController: UIViewController {
         return button
     }()
     
-    init(delegate: @escaping (Preferences, Int) -> Void, number: Int) {
-        self.delegate = delegate
-        self.number = number
+    init(delegate: @escaping (Weights?, [Int]?, [Int]?) -> Void) {
+        self.delegateModifyPrefs = delegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -45,7 +43,7 @@ class SelectWeightsController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Watchers preferences"
+        self.navigationItem.title = "Watchers weights"
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
         self.navigationItem.rightBarButtonItem = doneBarButton
         
@@ -131,7 +129,8 @@ class SelectWeightsController: UIViewController {
     }
     
     func donePressed(sender: UIBarButtonItem) {
-        
+        let selectGenresController = SelectGenresViewController(delegate: self.delegateModifyPrefs)
+        self.navigationController?.pushViewController(selectGenresController, animated: true)
     }
     
     override func viewWillDisappear(_ animated : Bool) {
@@ -143,8 +142,8 @@ class SelectWeightsController: UIViewController {
             let weightNew = self.sliders[2].value
             let weightPopularity = self.sliders[3].value
             
-            let preferences = Preferences(weightGenre: weightGenre, weightActor: weightActor, weightNew: weightNew, weightPopularity: weightPopularity, genreIds: [], actorIds: [])
-            self.delegate(preferences, self.number)
+            let weights = Weights(weightGenre: weightGenre, weightActor: weightActor, weightNew: weightNew, weightPopularity: weightPopularity)
+            self.delegateModifyPrefs(weights, nil, nil)
         }
     }
     

@@ -10,10 +10,12 @@ import Foundation
 
 struct Watcher {
     let name: String
+    var weights: Weights?
     var preferences: Preferences?
     
-    init(name: String, preferences: Preferences? = nil) {
+    init(name: String, weights: Weights? = nil, preferences: Preferences? = nil) {
         self.name = name
+        self.weights = weights
         self.preferences = preferences
     }
 }

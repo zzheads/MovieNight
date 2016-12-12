@@ -8,12 +8,7 @@
 
 import Foundation
 
-struct Preferences {
-    var weightGenre: Float
-    var weightActor: Float
-    var weightNew: Float
-    var weightPopularity: Float
-    
+struct Preferences {    
     var genreIds: [Int]
     var actorIds: [Int]
 }

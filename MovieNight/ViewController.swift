@@ -13,13 +13,15 @@ fileprivate let NUMBER_SLIDERS = 4
 
 class ViewController: UIViewController {
     
+    var currentWatcher = 0
+    
     var watchers: [Watcher] = [Watcher(name: ""), Watcher(name: "")] {
         didSet {
             for i in 0..<self.watchers.count {
                 let watcher = self.watchers[i]
                 let button = self.buttons[i]
                 
-                if watcher.preferences == nil {
+                if watcher.weights == nil && watcher.preferences == nil {
                     button.setBackgroundImage(#imageLiteral(resourceName: "bubble-empty"), for: .normal)
                 } else {
                     button.setBackgroundImage(#imageLiteral(resourceName: "bubble-selected"), for: .normal)
@@ -79,20 +81,35 @@ class ViewController: UIViewController {
         
     }
     
-    func changePreferences(preferences: Preferences, number: Int) {
-        self.watchers[number].preferences = preferences
+    func modifyPrefs(weights: Weights?, genreIds: [Int]?, actorIds: [Int]?) {
+        if let weights = weights {
+            self.watchers[currentWatcher].weights = weights
+        }
+        if let genreIds = genreIds {
+            if self.watchers[currentWatcher].preferences != nil {
+                self.watchers[currentWatcher].preferences?.genreIds = genreIds
+            } else {
+                self.watchers[currentWatcher].preferences = Preferences(genreIds: genreIds, actorIds: [])
+            }
+        }
+        if let actorIds = actorIds {
+            if self.watchers[currentWatcher].preferences != nil {
+                self.watchers[currentWatcher].preferences?.actorIds = actorIds
+            } else {
+                self.watchers[currentWatcher].preferences = Preferences(genreIds: [], actorIds: actorIds)
+            }
+        }
     }
     
     func buttonPressed(sender: UIButton) {
-        var number = 0
         for i in 0..<self.buttons.count {
             let button = self.buttons[i]
             if button == sender {
-                number = i
+                currentWatcher = i
             }
         }
         
-        let selectWeightsController = SelectWeightsController(delegate: changePreferences, number: number)
+        let selectWeightsController = SelectWeightsViewController(delegate: modifyPrefs)
         self.navigationController?.pushViewController(selectWeightsController, animated: true)
     }
     
