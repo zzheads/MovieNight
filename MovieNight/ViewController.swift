@@ -15,20 +15,37 @@ class ViewController: UIViewController {
     
     var currentWatcher = 0
     
-    var watchers: [Watcher] = [Watcher(name: ""), Watcher(name: "")] {
+    var watchers: [Watcher] = [Watcher(name: "Watcher 1"), Watcher(name: "Watcher 2")] {
         didSet {
             for i in 0..<self.watchers.count {
                 let watcher = self.watchers[i]
                 let button = self.buttons[i]
-                
+                                
                 if watcher.weights == nil && watcher.preferences == nil {
                     button.setBackgroundImage(#imageLiteral(resourceName: "bubble-empty"), for: .normal)
                 } else {
                     button.setBackgroundImage(#imageLiteral(resourceName: "bubble-selected"), for: .normal)
                 }
             }
+            if watchers.allSet {
+                showResultsButton.isHidden = false
+            }
         }
     }
+    
+    lazy var showResultsButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        button.setTitle("View Results", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = AppColors.Bordo.color
+        button.layer.cornerRadius = 6
+        button.layer.masksToBounds = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isHidden = true
+        button.addTarget(self, action: #selector(viewResults), for: .touchUpInside)
+        return button
+    }()
     
     lazy var clearBarButton: UIBarButtonItem = {
         let button = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearPressed(sender:)))
@@ -67,6 +84,14 @@ class ViewController: UIViewController {
             backgroundImage.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             backgroundImage.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
+            ])
+        
+        self.view.addSubview(self.showResultsButton)
+        NSLayoutConstraint.activate([
+            showResultsButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
+            showResultsButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16),
+            showResultsButton.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -16),
+            showResultsButton.heightAnchor.constraint(equalToConstant: 80)
             ])
         
         for i in 0..<self.buttons.count {
@@ -111,6 +136,11 @@ class ViewController: UIViewController {
         
         let selectWeightsController = SelectWeightsViewController(delegate: modifyPrefs)
         self.navigationController?.pushViewController(selectWeightsController, animated: true)
+    }
+    
+    func viewResults() {
+        let viewResultsController = ViewResultsController(watchers: self.watchers)
+        self.navigationController?.pushViewController(viewResultsController, animated: true)
     }
     
     func clearPressed(sender: UIBarButtonItem) {

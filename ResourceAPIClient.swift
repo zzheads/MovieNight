@@ -30,6 +30,7 @@ enum ResourceType: Endpoint {
         case TVCredits(id: Int)
         case CombainedCredits(id: Int)
         case Images(id: Int)
+        case Popular(pages: Int)
     }
     enum SearchRequests {
         case Companies(query: String, pages: Int)
@@ -92,6 +93,7 @@ enum ResourceType: Endpoint {
             case .TVCredits(let id): path = "person/\(id)/tv_credits"
             case .CombainedCredits(let id): path = "person/\(id)/combained_credits"
             case .Images(let id): path = "person/\(id)/images"
+            case .Popular(_): path = "person/popular"
             }
         case .Configuration: path = "configuration"
         case .Timezones: path = "timezones/list"
@@ -171,6 +173,7 @@ enum ResourceType: Endpoint {
             case .Movies(_, let page): return page
             default: return nil
             }
+        case .Person(.Popular(let page)): return page
         default: return nil
         }
     }
@@ -181,7 +184,7 @@ enum ResourceType: Endpoint {
         return request
     }
     
-    var pages: Int {
+    var pages: Int? {
         switch self {
         case .Search(.Movies(_, let pages)): return pages
         case .Search(.People(_, let pages)): return pages
@@ -197,7 +200,9 @@ enum ResourceType: Endpoint {
             
         case .Genre(.Movies(_, let pages)): return pages
             
-        default: return 0
+        case .Person(.Popular(let pages)): return pages
+            
+        default: return nil
         }
     }
 }
@@ -241,7 +246,10 @@ final class ResourceAPIClient: APIClient {
         let apiClient = ResourceAPIClient()
         var pageNumber = 1
         var results: [T] = []
-        let maxPages = resourceType.pages > 0 ? resourceType.pages : 999
+        var maxPages = 999
+        if let pages = resourceType.pages {
+            maxPages = pages
+        }
         
         func listPage(completion: @escaping ([T]) -> Void) {
             var resourceTypeWithPage: ResourceType = .Search(.Movies(query: "", pages: 0))
@@ -260,6 +268,8 @@ final class ResourceAPIClient: APIClient {
             case .Movie(.TopRated(_)): resourceTypeWithPage = .Movie(.TopRated(pages: pageNumber))
                 
             case .Genre(.Movies(let id, _)): resourceTypeWithPage = .Genre(.Movies(id: id, pages: pageNumber))
+                
+            case .Person(.Popular(_)): resourceTypeWithPage = .Person(.Popular(pages: pageNumber))
                 
             default: break
             }

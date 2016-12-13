@@ -129,6 +129,15 @@ class SelectWeightsViewController: UIViewController {
     }
     
     func donePressed(sender: UIBarButtonItem) {
+        let weightGenre = self.sliders[0].value
+        let weightActor = self.sliders[1].value
+        let weightNew = self.sliders[2].value
+        let weightPopularity = self.sliders[3].value
+        
+        let weights = Weights(weightGenre: weightGenre, weightActor: weightActor, weightNew: weightNew, weightPopularity: weightPopularity)
+        
+        self.delegateModifyPrefs(weights, nil, nil)
+        
         let selectGenresController = SelectGenresViewController(delegate: self.delegateModifyPrefs)
         self.navigationController?.pushViewController(selectGenresController, animated: true)
     }

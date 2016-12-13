@@ -19,3 +19,24 @@ struct Watcher {
         self.preferences = preferences
     }
 }
+
+extension Sequence where Iterator.Element == Watcher {
+    var allSet: Bool {
+        for watcher in self {
+            if watcher.preferences == nil {
+                return false
+            } else {
+                if (watcher.preferences?.actorIds.isEmpty)! {
+                    return false
+                }
+                if (watcher.preferences?.genreIds.isEmpty)! {
+                    return false
+                }
+            }
+            if watcher.weights == nil {
+                return false
+            }
+        }
+        return true
+    }
+}
