@@ -10,15 +10,54 @@ import Foundation
 import UIKit
 
 class SelectGenresViewController: UIViewController {
-    let delegateModifyPrefs: (Weights, [Int], [Int]) -> Void
+    let delegateModifyPrefs: (Weights?, [Int]?, [Int]?) -> Void
 
+    var genres: [Genre] = []
+    var selectedGenres: [Genre] = [] {
+        didSet {
+            self.footerForTableView.text = titleForFooter
+        }
+    }
+
+    var titleForFooter: String {
+        return "Selected \(self.selectedGenres.count) of \(self.genres.count)"
+    }
+    
+    lazy var footerForTableView: UILabel = {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: (self.navigationController?.navigationBar.bounds.size.height)!))
+        label.backgroundColor = AppColors.Bordo.color
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textColor = .white
+        label.text = self.titleForFooter
+        label.textAlignment = .center
+        return label
+    }()
+    
     lazy var backgroundImage: UIImageView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
+
+    lazy var tableView: UITableView = {
+        let table = UITableView()
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.backgroundView = self.backgroundImage
+        table.allowsMultipleSelection = true
+        table.allowsSelection = true
+        table.dataSource = self
+        table.delegate = self
+        return table
+    }()
     
-    init(delegate: @escaping (Weights, [Int], [Int]) -> Void) {
+    lazy var doneBarButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(donePressed(sender:)))
+        return button
+    }()    
+    
+    let apiClient = ResourceAPIClient()
+    
+    init(delegate: @escaping (Weights?, [Int]?, [Int]?) -> Void) {
         self.delegateModifyPrefs = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -29,8 +68,11 @@ class SelectGenresViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Watchers preferences"
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.navigationItem.title = "Select genres"
+        self.navigationController?.toolbar.barStyle = .blackOpaque
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
+        self.navigationItem.rightBarButtonItem = doneBarButton
         
         self.view.addSubview(self.backgroundImage)
         NSLayoutConstraint.activate([
@@ -38,6 +80,103 @@ class SelectGenresViewController: UIViewController {
             backgroundImage.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             backgroundImage.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
-            ])        
+            ])
+        
+        self.view.addSubview(tableView)
+        NSLayoutConstraint.activate([
+            tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            tableView.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
+            ])
+
+        apiClient.fetchResource(resource: ResourceType.Genre(.MovieList), resourceClass: Genres.self) { result in
+            switch result {
+            case .Success(let genres):
+                for genre in genres.genres {
+                    self.genres.append(genre)
+                }
+                self.tableView.reloadData()
+                
+            case .Failure(let error):
+                print("\(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func donePressed(sender: UIBarButtonItem) {
+        var genreIds: [Int] = []
+        for genre in self.selectedGenres {
+           genreIds.append(genre.id)
+        }
+        self.delegateModifyPrefs(nil, genreIds, [])
     }
 }
+
+extension SelectGenresViewController: UITableViewDataSource {
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return genres.count
+    }
+    
+    // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
+    // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        
+        if self.genres.isEmpty {
+            return cell
+        }
+        cell.textLabel?.text = self.genres[indexPath.row].name
+        cell.accessoryType = cell.isSelected ? .checkmark : .none
+        cell.selectionStyle = .default
+    
+        return cell
+    }
+    
+    public func numberOfSections(in tableView: UITableView) -> Int {   // Default is 1 if not implemented
+        return 1
+    }
+}
+
+extension SelectGenresViewController: UITableViewDelegate {
+
+    // Variable height support
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 40
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return (navigationController?.navigationBar.bounds.size.height)!
+    }
+ 
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {   // custom view for footer. will be adjusted to default or specified footer height
+        return self.footerForTableView
+    }
+    
+    // Called after the user changes the selection.
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        let genre = self.genres[indexPath.row]
+        if !self.selectedGenres.contains(where: { $0.id == genre.id }) {
+            self.selectedGenres.append(genre)
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        let genre = self.genres[indexPath.row]
+        self.selectedGenres.remove(at: selectedGenres.index(where: { $0.id == genre.id })!)
+    }
+    
+}
+
+
+
+
+
+
+
+

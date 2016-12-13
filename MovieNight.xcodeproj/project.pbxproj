@@ -66,6 +66,7 @@
 		A64AB07D1DFEDA850049BEA1 /* popcorn.png in Resources */ = {isa = PBXBuildFile; fileRef = A64AB0671DFEDA850049BEA1 /* popcorn.png */; };
 		A64AB07F1DFEDE6F0049BEA1 /* SelectGenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB07E1DFEDE6F0049BEA1 /* SelectGenresViewController.swift */; };
 		A64AB0811DFEDF230049BEA1 /* Weights.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB0801DFEDF230049BEA1 /* Weights.swift */; };
+		A64AB0831DFFCFBA0049BEA1 /* Genres.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB0821DFFCFBA0049BEA1 /* Genres.swift */; };
 		A664BF551DFD6A69003F8231 /* ExtensionUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A664BF541DFD6A69003F8231 /* ExtensionUIImageView.swift */; };
 /* End PBXBuildFile section */
 
@@ -131,6 +132,7 @@
 		A64AB0671DFEDA850049BEA1 /* popcorn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = popcorn.png; path = MovieNight/Assets.xcassets/popcorn.png; sourceTree = "<group>"; };
 		A64AB07E1DFEDE6F0049BEA1 /* SelectGenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectGenresViewController.swift; path = ../SelectGenresViewController.swift; sourceTree = "<group>"; };
 		A64AB0801DFEDF230049BEA1 /* Weights.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weights.swift; sourceTree = "<group>"; };
+		A64AB0821DFFCFBA0049BEA1 /* Genres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genres.swift; sourceTree = "<group>"; };
 		A664BF541DFD6A69003F8231 /* ExtensionUIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionUIImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -248,6 +250,7 @@
 				A628CCB81DFC13FB0008577A /* Collection */,
 				A628CCB71DFC13ED0008577A /* Credits */,
 				A628CCB61DFC13BD0008577A /* Movie */,
+				A64AB0841DFFD0650049BEA1 /* Genres */,
 				A628CCAE1DFC007D0008577A /* Configuration */,
 				A628CCBB1DFC14780008577A /* Timezone */,
 			);
@@ -358,6 +361,14 @@
 				A64AB0801DFEDF230049BEA1 /* Weights.swift */,
 			);
 			name = Watcher;
+			sourceTree = "<group>";
+		};
+		A64AB0841DFFD0650049BEA1 /* Genres */ = {
+			isa = PBXGroup;
+			children = (
+				A64AB0821DFFCFBA0049BEA1 /* Genres.swift */,
+			);
+			name = Genres;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -474,6 +485,7 @@
 				A628CC8D1DFAC1160008577A /* Resource.swift in Sources */,
 				A628CC951DFAC3100008577A /* ProductionCountry.swift in Sources */,
 				A628CC4D1DFAB1FA0008577A /* AppDelegate.swift in Sources */,
+				A64AB0831DFFCFBA0049BEA1 /* Genres.swift in Sources */,
 				A628CCAB1DFBF94C0008577A /* Person.swift in Sources */,
 				A628CCAD1DFBFE4F0008577A /* PersonImage.swift in Sources */,
 				A628CCC41DFC2C480008577A /* Job.swift in Sources */,

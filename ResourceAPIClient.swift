@@ -46,6 +46,11 @@ enum ResourceType: Endpoint {
             }
         }
     }
+    enum GenreRequests {
+        case MovieList
+        case TVList
+        case Movies(id: Int, pages: Int)
+    }
     
     case Movie(MovieRequests)
     case Collection(CollectionRequests)
@@ -54,6 +59,7 @@ enum ResourceType: Endpoint {
     case Timezones
     case Jobs
     case Search(SearchRequests)
+    case Genre(GenreRequests)
     
     var baseURL: URL {
         return URL(string: "https://api.themoviedb.org/3/")!
@@ -100,7 +106,14 @@ enum ResourceType: Endpoint {
             case .People(_): path = "search/person"
             case .TVShows(_): path = "search/tv"
             }
+        case .Genre(let req):
+            switch req {
+            case .MovieList: path = "genre/movie/list"
+            case .TVList: path = "genre/tv/list"
+            case .Movies(let id): path = "genre/\(id)/movies"
+            }
         }
+        
         if let key = keyAdd {
             path += "?api_key=\(key)"
         }
@@ -129,7 +142,7 @@ enum ResourceType: Endpoint {
             }
         default: break
         }
-        return "ru-RU"
+        return "en-US"
     }
 
     var queryAdd: String? {
@@ -151,6 +164,11 @@ enum ResourceType: Endpoint {
         case .Movie(let movieReq):
             switch movieReq {
             case .NowPlaying(let page), .Popular(let page), .TopRated(let page), .Upcoming(let page): return page
+            default: return nil
+            }
+        case .Genre(let genreReq):
+            switch genreReq {
+            case .Movies(_, let page): return page
             default: return nil
             }
         default: return nil
@@ -176,6 +194,8 @@ enum ResourceType: Endpoint {
         case .Movie(.Popular(let pages)): return pages
         case .Movie(.Upcoming(let pages)): return pages
         case .Movie(.TopRated(let pages)): return pages
+            
+        case .Genre(.Movies(_, let pages)): return pages
             
         default: return 0
         }
@@ -238,6 +258,8 @@ final class ResourceAPIClient: APIClient {
             case .Movie(.Popular(_)): resourceTypeWithPage = .Movie(.Popular(pages: pageNumber))
             case .Movie(.Upcoming(_)): resourceTypeWithPage = .Movie(.Upcoming(pages: pageNumber))
             case .Movie(.TopRated(_)): resourceTypeWithPage = .Movie(.TopRated(pages: pageNumber))
+                
+            case .Genre(.Movies(let id, _)): resourceTypeWithPage = .Genre(.Movies(id: id, pages: pageNumber))
                 
             default: break
             }
