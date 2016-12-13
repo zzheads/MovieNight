@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class SelectGenresViewController: UIViewController {
-    let delegateModifyPrefs: (Weights?, [Int]?, [Int]?) -> Void
+    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?) -> Void
 
     var genres: [Genre] = []
     var selectedGenres: [Genre] = [] {
@@ -57,7 +57,7 @@ class SelectGenresViewController: UIViewController {
     
     let apiClient = ResourceAPIClient()
     
-    init(delegate: @escaping (Weights?, [Int]?, [Int]?) -> Void) {
+    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?) -> Void) {
         self.delegateModifyPrefs = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -105,11 +105,7 @@ class SelectGenresViewController: UIViewController {
     }
     
     func donePressed(sender: UIBarButtonItem) {
-        var genreIds: [Int] = []
-        for genre in self.selectedGenres {
-           genreIds.append(genre.id)
-        }
-        self.delegateModifyPrefs(nil, genreIds, nil)
+        self.delegateModifyPrefs(nil, self.selectedGenres, nil)
         
         let selectActorsController = SelectActorsViewController(delegate: self.delegateModifyPrefs)
         self.navigationController?.pushViewController(selectActorsController, animated: true)

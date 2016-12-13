@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class SelectActorsViewController: UIViewController {
-    let delegateModifyPrefs: (Weights?, [Int]?, [Int]?) -> Void
+    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?) -> Void
     
     var actors: [Actor] = []
     var selectedActors: [Actor] = [] {
@@ -57,7 +57,7 @@ class SelectActorsViewController: UIViewController {
     
     let apiClient = ResourceAPIClient()
     
-    init(delegate: @escaping (Weights?, [Int]?, [Int]?) -> Void) {
+    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?) -> Void) {
         self.delegateModifyPrefs = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -99,11 +99,7 @@ class SelectActorsViewController: UIViewController {
     }
     
     func donePressed(sender: UIBarButtonItem) {
-        var actorIds: [Int] = []
-        for actor in self.selectedActors {
-            actorIds.append(actor.id)
-        }
-        self.delegateModifyPrefs(nil, nil, actorIds)
+        self.delegateModifyPrefs(nil, nil, self.selectedActors)
         
         if let rootViewController = self.navigationController?.popToRootViewController(animated: true)?[0] {
             self.navigationController?.pushViewController(rootViewController, animated: true)

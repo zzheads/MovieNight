@@ -11,30 +11,27 @@ import Foundation
 struct Watcher {
     let name: String
     var weights: Weights?
-    var preferences: Preferences?
+    var genres: [Genre]?
+    var actors: [Actor]?
+
     
-    init(name: String, weights: Weights? = nil, preferences: Preferences? = nil) {
+    init(name: String, weights: Weights? = nil, genres: [Genre]? = nil, actors: [Actor]? = nil) {
         self.name = name
         self.weights = weights
-        self.preferences = preferences
+        self.genres = genres
+        self.actors = actors
     }
 }
 
 extension Sequence where Iterator.Element == Watcher {
     var allSet: Bool {
         for watcher in self {
-            if watcher.preferences == nil {
-                return false
-            } else {
-                if (watcher.preferences?.actorIds.isEmpty)! {
+            guard
+                let _ = watcher.weights,
+                let _ = watcher.genres,
+                let _ = watcher.actors
+                else {
                     return false
-                }
-                if (watcher.preferences?.genreIds.isEmpty)! {
-                    return false
-                }
-            }
-            if watcher.weights == nil {
-                return false
             }
         }
         return true

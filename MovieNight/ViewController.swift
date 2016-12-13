@@ -21,7 +21,7 @@ class ViewController: UIViewController {
                 let watcher = self.watchers[i]
                 let button = self.buttons[i]
                                 
-                if watcher.weights == nil && watcher.preferences == nil {
+                if watcher.weights == nil && watcher.genres == nil && watcher.actors == nil {
                     button.setBackgroundImage(#imageLiteral(resourceName: "bubble-empty"), for: .normal)
                 } else {
                     button.setBackgroundImage(#imageLiteral(resourceName: "bubble-selected"), for: .normal)
@@ -106,23 +106,15 @@ class ViewController: UIViewController {
         
     }
     
-    func modifyPrefs(weights: Weights?, genreIds: [Int]?, actorIds: [Int]?) {
+    func modifyPrefs(weights: Weights?, genres: [Genre]?, actors: [Actor]?) {
         if let weights = weights {
             self.watchers[currentWatcher].weights = weights
         }
-        if let genreIds = genreIds {
-            if self.watchers[currentWatcher].preferences != nil {
-                self.watchers[currentWatcher].preferences?.genreIds = genreIds
-            } else {
-                self.watchers[currentWatcher].preferences = Preferences(genreIds: genreIds, actorIds: [])
-            }
+        if let genres = genres {
+            self.watchers[currentWatcher].genres = genres
         }
-        if let actorIds = actorIds {
-            if self.watchers[currentWatcher].preferences != nil {
-                self.watchers[currentWatcher].preferences?.actorIds = actorIds
-            } else {
-                self.watchers[currentWatcher].preferences = Preferences(genreIds: [], actorIds: actorIds)
-            }
+        if let actors = actors {
+            self.watchers[currentWatcher].actors = actors
         }
     }
     
@@ -145,7 +137,9 @@ class ViewController: UIViewController {
     
     func clearPressed(sender: UIBarButtonItem) {
         for i in 0..<self.watchers.count {
-            self.watchers[i].preferences = nil
+            watchers[i].weights = nil
+            watchers[i].genres = nil
+            watchers[i].actors = nil
         }
     }
 }

@@ -13,7 +13,7 @@ fileprivate let NUMBER_SLIDERS = 4
 
 class SelectWeightsViewController: UIViewController {
     
-    let delegateModifyPrefs: (Weights?, [Int]?, [Int]?) -> Void
+    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?) -> Void
     
     lazy var backgroundImage: UIImageView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
@@ -32,7 +32,7 @@ class SelectWeightsViewController: UIViewController {
         return button
     }()
     
-    init(delegate: @escaping (Weights?, [Int]?, [Int]?) -> Void) {
+    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?) -> Void) {
         self.delegateModifyPrefs = delegate
         super.init(nibName: nil, bundle: nil)
     }
