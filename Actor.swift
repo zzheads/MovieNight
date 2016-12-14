@@ -36,3 +36,9 @@ struct Actor: JSONDecodable {
         }
     }
 }
+
+extension Actor: KnownForType {
+    var knownFor: [Idable] {
+        return self.known_for
+    }
+}

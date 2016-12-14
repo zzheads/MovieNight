@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Weights {
+struct Weights: WeightType {
     var weightGenre: Float
     var weightActor: Float
     var weightNew: Float

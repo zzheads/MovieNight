@@ -42,7 +42,7 @@ class ViewController: UIViewController {
         button.layer.cornerRadius = 6
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.isHidden = true
+        //button.isHidden = true
         button.addTarget(self, action: #selector(viewResults), for: .touchUpInside)
         return button
     }()

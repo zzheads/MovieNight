@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+fileprivate let cellIdentifier = "cell\(String(describing: SelectGenresViewController.self))"
+
 class SelectGenresViewController: UIViewController {
     let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?) -> Void
 
@@ -68,7 +70,7 @@ class SelectGenresViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         self.navigationItem.title = "Select genres"
         self.navigationController?.toolbar.barStyle = .blackOpaque
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
@@ -122,7 +124,7 @@ extension SelectGenresViewController: UITableViewDataSource {
     // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
         if self.genres.isEmpty {
             return cell

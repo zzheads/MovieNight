@@ -23,3 +23,9 @@ struct Genre: JSONDecodable {
         self.name = name
     }
 }
+
+extension Genre: Idable {
+    var title: String {
+        return self.name
+    }
+}

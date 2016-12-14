@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Movie: JSONDecodable {
+struct Movie: JSONDecodable, Idable {
     let id: Int
     let title: String
     let adult: Bool?

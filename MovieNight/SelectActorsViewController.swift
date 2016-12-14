@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+fileprivate let cellIdentifier = "cell\(String(describing: SelectActorsViewController.self))"
+
 class SelectActorsViewController: UIViewController {
     let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?) -> Void
     
@@ -68,7 +70,7 @@ class SelectActorsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         self.navigationItem.title = "Select actors"
         self.navigationController?.toolbar.barStyle = .blackOpaque
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
@@ -117,7 +119,7 @@ extension SelectActorsViewController: UITableViewDataSource {
     // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
         if self.actors.isEmpty {
             return cell
