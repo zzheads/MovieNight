@@ -15,7 +15,13 @@ class ViewResultsController: UIViewController {
     
     let watchers: [Watcher]
     
-    var bestMatches: [(element: MovieHead, inFirst: Int, inSecond: Int)] = []
+    var results: [Result] = [] {
+        didSet {
+            if self.results.count >= 10 {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
     lazy var tableView: UITableView = {
         let table = UITableView()
@@ -60,10 +66,35 @@ class ViewResultsController: UIViewController {
                     return
             }
             
-            if let bestMatches = self.findIntersectionBest(first: sorted1 as! [MovieHead], second: sorted2 as! [MovieHead], number: 10) {
-                self.bestMatches = bestMatches
-                self.tableView.reloadData()
+            guard let bestMatches = self.findIntersectionBest(first: sorted1 as! [MovieHead], second: sorted2 as! [MovieHead], number: 10) else {
+                return
             }
+
+            self.apiClient.fetchResource(resource: ResourceType.Configuration, resourceClass: Configuration.self) { result in
+                switch result {
+                case .Success(let config):
+
+                    for match in bestMatches {
+                        let id = match.element.id
+                        self.apiClient.fetchResource(resource: ResourceType.Movie(.Images(id: id)), resourceClass: Image.self) { result in
+                            switch result {
+                            case .Success(let image):
+                                let result = Result(intersection: match, config: config, image: image)
+                                self.results.append(result)
+                                
+                            case .Failure(let error):
+                                print("\(error.localizedDescription)")
+                                return
+                            }
+                        }
+                    }
+                    
+                case .Failure(let error):
+                    print("\(error.localizedDescription)")
+                    return
+                }
+            }
+            
         }
     }
 }
@@ -99,7 +130,7 @@ extension ViewResultsController {
 extension ViewResultsController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return self.results.count
     }
     
     // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
@@ -107,19 +138,30 @@ extension ViewResultsController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        let image = UIImageView(image: #imageLiteral(resourceName: "appicon"))
-        cell.contentView.addSubview(image)
+        
+        let movie = self.results[indexPath.row]
+        let image = UIImageView()
+        image.downloadedFrom(url: URL(string: movie.imagePath)!)
+        let view = UIView(frame: image.bounds)
+        view.backgroundColor = .gray
         image.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(image)
         NSLayoutConstraint.activate([
-            image.leftAnchor.constraint(equalTo: cell.leftAnchor),
-            image.topAnchor.constraint(equalTo: cell.topAnchor),
+            image.leftAnchor.constraint(equalTo: view.leftAnchor),
+            image.rightAnchor.constraint(equalTo: view.rightAnchor),
+            image.topAnchor.constraint(equalTo: view.topAnchor),
+            image.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        view.translatesAutoresizingMaskIntoConstraints = false
+        cell.contentView.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.leftAnchor.constraint(equalTo: cell.leftAnchor),
+            view.rightAnchor.constraint(equalTo: cell.rightAnchor),
+            view.topAnchor.constraint(equalTo: cell.topAnchor),
+            view.bottomAnchor.constraint(equalTo: cell.bottomAnchor)
             ])
         
-        
-        if self.bestMatches.isEmpty {
-            return cell
-        }
-        cell.textLabel?.text = "\(self.bestMatches[indexPath.row].element.title) [\(self.bestMatches[indexPath.row].inFirst)] [\(self.bestMatches[indexPath.row].inSecond)]"
         
         return cell
     }
@@ -134,18 +176,13 @@ extension ViewResultsController: UITableViewDelegate {
     // Variable height support
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
+        return 50
     }
     
     // Called after the user changes the selection.
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        let movie = self.bestMatches[indexPath.row]
+        let movie = self.results[indexPath.row]
     }
-    
-    public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.accessoryType = .none
-    }
-    
+        
 }
 
