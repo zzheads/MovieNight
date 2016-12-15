@@ -207,6 +207,28 @@ enum ResourceType: Endpoint {
     }
 }
 
+extension ResourceType: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .Collection(_): return "Collection"
+        case .Configuration: return "Configuration"
+        case .Genre(_): return "Genre"
+        case .Jobs: return "Jobs"
+        case .Movie(.Details(_)): return "Details of movie"
+        case .Movie(.Credits(_)): return "Credits of movie"
+        case .Movie(.Images(_)): return "Images of movie"
+        case .Movie(.NowPlaying(_)): return "NowPlaying movies"
+        case .Movie(.Popular(_)): return "Popular movies"
+        case .Movie(.TopRated(_)): return "TopRated movies"
+        case .Movie(.Upcoming(_)): return "Upcoming movies"
+        case .Person(_): return "Person"
+        case .Search(_): return "Search"
+        case .Timezones: return "Timezones"
+        default: return "Unknown: \(self)"
+        }
+    }
+}
+
 final class ResourceAPIClient: APIClient {
     
     let configuration: URLSessionConfiguration
@@ -283,7 +305,7 @@ final class ResourceAPIClient: APIClient {
                         } else {
                         }
                     }
-                    print(pageNumber)
+                    print("Fetching \(pageNumber) of \(resourceTypeWithPage) page...")
                     let pagesMax = resourcePage.total_pages > maxPages ? maxPages : resourcePage.total_pages
                     if pageNumber < pagesMax {
                         pageNumber += 1

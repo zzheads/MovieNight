@@ -23,11 +23,26 @@ class ViewResultsController: UIViewController {
         }
     }
     
+    lazy var backgroundView: UIView = {
+        let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
+        image.translatesAutoresizingMaskIntoConstraints = false
+        let view = UIView(frame: image.bounds)
+        view.addSubview(image)
+        NSLayoutConstraint.activate([
+            image.leftAnchor.constraint(equalTo: view.leftAnchor),
+            image.rightAnchor.constraint(equalTo: view.rightAnchor),
+            image.topAnchor.constraint(equalTo: view.topAnchor),
+            image.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        return view
+    }()
+    
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
         table.dataSource = self
         table.delegate = self
+        table.backgroundView = self.backgroundView
         return table
     }()
     
@@ -137,17 +152,30 @@ extension ViewResultsController: UITableViewDataSource {
     // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+
         let movie = self.results[indexPath.row]
         let image = movie.image
+        
         image.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(image)
-        NSLayoutConstraint.activate([
-            image.leftAnchor.constraint(equalTo: cell.leftAnchor),
-            image.topAnchor.constraint(equalTo: cell.topAnchor),
-            image.bottomAnchor.constraint(equalTo: cell.bottomAnchor)
-            ])
+        cell.imageView?.image = image.image
+        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 13)
+        cell.textLabel?.textColor = .white
+        cell.textLabel?.backgroundColor = .clear
+        cell.backgroundColor = .clear
+        cell.textLabel?.textAlignment = .justified
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.text = String.init(format: "%@ ratings: %d; %d", movie.title, movie.ratings[0], movie.ratings[1])
+
+//        let label = UILabel()
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.text = String.init(format: "%@ ratings: %d; %d", movie.title, movie.ratings[0], movie.ratings[1])
+//        cell.contentView.addSubview(label)
+//        NSLayoutConstraint.activate([
+//            label.centerXAnchor.constraint(equalTo: cell.centerXAnchor),
+//            label.centerYAnchor.constraint(equalTo: cell.centerYAnchor)
+//            ])
         
         return cell
     }
@@ -159,8 +187,6 @@ extension ViewResultsController: UITableViewDataSource {
 
 extension ViewResultsController: UITableViewDelegate {
     
-    // Variable height support
-    
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let image = self.results[indexPath.row].image.image else {
             return 0
@@ -168,14 +194,9 @@ extension ViewResultsController: UITableViewDelegate {
         return image.size.height
     }
     
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0
-    }
-    
-    
-    // Called after the user changes the selection.
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movie = self.results[indexPath.row]
+        let movieDetailsViewController = MovieDetailsViewController(movieId: self.results[indexPath.row].id)
+        self.navigationController?.pushViewController(movieDetailsViewController, animated: true)
     }
         
 }

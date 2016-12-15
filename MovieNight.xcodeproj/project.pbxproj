@@ -73,6 +73,9 @@
 		A64AB08F1E011BF30049BEA1 /* DictionarySort.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB08E1E011BF30049BEA1 /* DictionarySort.swift */; };
 		A64AB0911E011D240049BEA1 /* FindById.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64AB0901E011D240049BEA1 /* FindById.swift */; };
 		A664BF551DFD6A69003F8231 /* ExtensionUIImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A664BF541DFD6A69003F8231 /* ExtensionUIImageView.swift */; };
+		A67511951E0282DC004CE256 /* MovieDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67511941E0282DC004CE256 /* MovieDetailsViewController.swift */; };
+		A67511981E028376004CE256 /* MovieDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67511971E028376004CE256 /* MovieDetails.swift */; };
+		A675119A1E02923D004CE256 /* ResizeUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67511991E02923D004CE256 /* ResizeUIImage.swift */; };
 		A6946DF51E0187E200C8513F /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6946DF41E0187E200C8513F /* Result.swift */; };
 /* End PBXBuildFile section */
 
@@ -145,6 +148,9 @@
 		A64AB08E1E011BF30049BEA1 /* DictionarySort.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionarySort.swift; sourceTree = "<group>"; };
 		A64AB0901E011D240049BEA1 /* FindById.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FindById.swift; sourceTree = "<group>"; };
 		A664BF541DFD6A69003F8231 /* ExtensionUIImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionUIImageView.swift; sourceTree = "<group>"; };
+		A67511941E0282DC004CE256 /* MovieDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewController.swift; sourceTree = "<group>"; };
+		A67511971E028376004CE256 /* MovieDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieDetails.swift; sourceTree = "<group>"; };
+		A67511991E02923D004CE256 /* ResizeUIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResizeUIImage.swift; sourceTree = "<group>"; };
 		A6946DF41E0187E200C8513F /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -184,6 +190,7 @@
 				A64AB07E1DFEDE6F0049BEA1 /* SelectGenresViewController.swift */,
 				A64AB0851E0011720049BEA1 /* SelectActorsViewController.swift */,
 				A64AB0891E0025530049BEA1 /* ViewResultsController.swift */,
+				A67511941E0282DC004CE256 /* MovieDetailsViewController.swift */,
 				A628CC821DFABDBB0008577A /* Model */,
 				A628CCB31DFC05A60008577A /* Helpers */,
 				A628CC811DFAB3070008577A /* Resources */,
@@ -227,6 +234,7 @@
 		A628CC821DFABDBB0008577A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				A67511961E02835E004CE256 /* MovieDetails */,
 				A6946DF31E01879300C8513F /* Result */,
 				A64AB08B1E00280C0049BEA1 /* Rating */,
 				A64AB0411DFE9D240049BEA1 /* Watcher */,
@@ -290,6 +298,7 @@
 				A64AB0461DFED1800049BEA1 /* AppColors.swift */,
 				A64AB08E1E011BF30049BEA1 /* DictionarySort.swift */,
 				A64AB0901E011D240049BEA1 /* FindById.swift */,
+				A67511991E02923D004CE256 /* ResizeUIImage.swift */,
 			);
 			name = Helpers;
 			path = ..;
@@ -397,6 +406,14 @@
 			name = Rating;
 			sourceTree = "<group>";
 		};
+		A67511961E02835E004CE256 /* MovieDetails */ = {
+			isa = PBXGroup;
+			children = (
+				A67511971E028376004CE256 /* MovieDetails.swift */,
+			);
+			name = MovieDetails;
+			sourceTree = "<group>";
+		};
 		A6946DF31E01879300C8513F /* Result */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,7 +449,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0810;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = zzheads;
 				TargetAttributes = {
 					A628CC481DFAB1FA0008577A = {
@@ -507,6 +524,7 @@
 				A628CCA31DFB068B0008577A /* Keyword.swift in Sources */,
 				A628CC931DFAC2BF0008577A /* ProductionCompany.swift in Sources */,
 				A628CCB21DFC01920008577A /* Configuration.swift in Sources */,
+				A67511981E028376004CE256 /* MovieDetails.swift in Sources */,
 				A628CC991DFAC9AC0008577A /* MovieHead.swift in Sources */,
 				A64AB07F1DFEDE6F0049BEA1 /* SelectGenresViewController.swift in Sources */,
 				A628CCBD1DFC149C0008577A /* Timezone.swift in Sources */,
@@ -515,6 +533,7 @@
 				A628CCA11DFAE82F0008577A /* Crew.swift in Sources */,
 				A628CC9B1DFACD1B0008577A /* Collection.swift in Sources */,
 				A64AB0471DFED1800049BEA1 /* AppColors.swift in Sources */,
+				A67511951E0282DC004CE256 /* MovieDetailsViewController.swift in Sources */,
 				A64AB08A1E0025530049BEA1 /* ViewResultsController.swift in Sources */,
 				A628CCB51DFC05BB0008577A /* StringArrayExtension.swift in Sources */,
 				A628CC9F1DFAE6E60008577A /* Cast.swift in Sources */,
@@ -532,6 +551,7 @@
 				A64AB0431DFE9D370049BEA1 /* Watcher.swift in Sources */,
 				A64AB0401DFE97D30049BEA1 /* SelectWeightsViewController.swift in Sources */,
 				A628CC8A1DFABED50008577A /* ResourceAPIClient.swift in Sources */,
+				A675119A1E02923D004CE256 /* ResizeUIImage.swift in Sources */,
 				A628CCC71DFC37970008577A /* Page.swift in Sources */,
 				A64AB0881E0019C80049BEA1 /* Actor.swift in Sources */,
 				A628CCA51DFB072C0008577A /* Keywords.swift in Sources */,
@@ -577,6 +597,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -627,6 +648,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
