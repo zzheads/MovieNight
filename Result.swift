@@ -21,10 +21,12 @@ class Result {
         self.title = movie.title
         self.ratings = [intersection.inFirst, intersection.inSecond]
         self.image = UIImageView()
-        if let posters = image.posters {
-            let posterPath = posters[0].file_path
-            let imageURL = URL(string: config.images.secure_base_url + config.images.poster_sizes[0] + posterPath)
-            image.downloadedFrom(url: imageURL)
-        } 
+        guard
+            let posters = image.posters,
+            let url = URL(string: config.images.secure_base_url + config.images.poster_sizes[0] + posters[0].file_path)
+            else {
+                return
+        }
+        self.image.downloadedFrom(url: url)
     }
 }

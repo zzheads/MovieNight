@@ -140,28 +140,14 @@ extension ViewResultsController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
         let movie = self.results[indexPath.row]
-        let image = UIImageView()
-        image.downloadedFrom(url: URL(string: movie.imagePath)!)
-        let view = UIView(frame: image.bounds)
-        view.backgroundColor = .gray
+        let image = movie.image
         image.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(image)
+        cell.contentView.addSubview(image)
         NSLayoutConstraint.activate([
-            image.leftAnchor.constraint(equalTo: view.leftAnchor),
-            image.rightAnchor.constraint(equalTo: view.rightAnchor),
-            image.topAnchor.constraint(equalTo: view.topAnchor),
-            image.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            image.leftAnchor.constraint(equalTo: cell.leftAnchor),
+            image.topAnchor.constraint(equalTo: cell.topAnchor),
+            image.bottomAnchor.constraint(equalTo: cell.bottomAnchor)
             ])
-        view.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addSubview(view)
-        NSLayoutConstraint.activate([
-            view.leftAnchor.constraint(equalTo: cell.leftAnchor),
-            view.rightAnchor.constraint(equalTo: cell.rightAnchor),
-            view.topAnchor.constraint(equalTo: cell.topAnchor),
-            view.bottomAnchor.constraint(equalTo: cell.bottomAnchor)
-            ])
-        
         
         return cell
     }
@@ -176,8 +162,16 @@ extension ViewResultsController: UITableViewDelegate {
     // Variable height support
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        guard let image = self.results[indexPath.row].image.image else {
+            return 0
+        }
+        return image.size.height
     }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
+    }
+    
     
     // Called after the user changes the selection.
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
