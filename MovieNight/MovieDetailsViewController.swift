@@ -30,13 +30,12 @@ class MovieDetailsViewController: UIViewController {
     var poster: UIImageView? {
         guard
             let config = self.config,
-            let image = self.image,
-            let posters = image.posters
+            let image = self.image
             else {
             return nil
         }
         let imageView = UIImageView()
-        let path = config.images.secure_base_url + config.images.poster_sizes[2] + posters[0].file_path
+        let path = config.images.secure_base_url + config.images.poster_sizes[2] + image.posters[0].file_path
         imageView.downloadedFrom(link: path)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -64,7 +63,7 @@ class MovieDetailsViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 11)
         label.textColor = .white
         label.numberOfLines = 0
-        label.text = movie.release_date
+        label.text = "Released: \(movie.release_date)\n "
         return label
     }
     
@@ -111,22 +110,22 @@ class MovieDetailsViewController: UIViewController {
                                         self.image = image
                                         self.showAll()
                                     case .Failure(let error):
-                                        print("\(error.localizedDescription)")
+                                        print("Fetching image: \(error.localizedDescription)")
                                         return
                                     }
                                 }
                             case .Failure(let error):
-                                print("\(error.localizedDescription)")
+                                print("Fetching credits: \(error.localizedDescription)")
                                 return
                             }
                         }
                     case .Failure(let error):
-                        print("\(error.localizedDescription)")
+                        print("Fetching config: \(error.localizedDescription)")
                         return
                     }
                 }
             case .Failure(let error):
-                print("\(error.localizedDescription)")
+                print("Fetching movie: \(error.localizedDescription)")
                 return
             }
         }
@@ -135,14 +134,13 @@ class MovieDetailsViewController: UIViewController {
     func showAll() {
         guard
         let poster = self.poster,
-        let image = self.image,
-        let posters = image.posters
+        let image = self.image
         else {
             return
         }
         
         let width = CGFloat(185)
-        let height = width / CGFloat(posters[0].aspect_ratio)
+        let height = width / CGFloat(image.posters[0].aspect_ratio)
         
         self.view.addSubview(poster)
         NSLayoutConstraint.activate([

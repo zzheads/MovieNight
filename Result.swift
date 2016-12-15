@@ -22,8 +22,7 @@ class Result {
         self.ratings = [intersection.inFirst, intersection.inSecond]
         self.image = UIImageView()
         guard
-            let posters = image.posters,
-            let url = URL(string: config.images.secure_base_url + config.images.poster_sizes[0] + posters[0].file_path)
+            let url = URL(string: config.images.secure_base_url + config.images.poster_sizes[0] + image.posters[0].file_path)
             else {
                 return
         }

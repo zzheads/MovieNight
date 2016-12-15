@@ -10,30 +10,26 @@ import Foundation
 
 struct Image: JSONDecodable {
     let id: Int
-    var backdrops: [Pic]?
-    var posters: [Pic]?
+    var backdrops: [Pic] = []
+    var posters: [Pic] = []
     
     init?(JSON: JSON) {
         guard
-            let id = JSON["id"] as? Int
+            let id = JSON["id"] as? Int,
+            let backdropsJSONArray = JSON["backdrops"] as? [JSON],
+            let postersJSONArray = JSON["posters"] as? [JSON]
             else {
                 return nil
         }
         self.id = id
-        if let jsonArray = JSON["backdrops"] as? [JSON] {
-            self.backdrops = []
-            for json in jsonArray {
-                if let backdrop = Pic(JSON: json) {
-                    self.backdrops?.append(backdrop)
-                }
+        for json in backdropsJSONArray {
+            if let backdrop = Pic(JSON: json) {
+                self.backdrops.append(backdrop)
             }
         }
-        if let jsonArray = JSON["posters"] as? [JSON] {
-            self.posters = []
-            for json in jsonArray {
-                if let poster = Pic(JSON: json) {
-                    self.posters?.append(poster)
-                }
+        for json in postersJSONArray {
+            if let poster = Pic(JSON: json) {
+                self.posters.append(poster)
             }
         }
     }
