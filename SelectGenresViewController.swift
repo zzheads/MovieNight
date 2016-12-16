@@ -129,9 +129,16 @@ extension SelectGenresViewController: UITableViewDataSource {
         if self.genres.isEmpty {
             return cell
         }
+
+        cell.accessoryType = .none
+        cell.selectionStyle = .none
+        
+        if cell.isSelected {
+            cell.check()
+        } else {
+            cell.uncheck()
+        }
         cell.textLabel?.text = self.genres[indexPath.row].name
-        cell.accessoryType = cell.isSelected ? .checkmark : .none
-        cell.selectionStyle = .default
     
         return cell
     }
@@ -139,6 +146,7 @@ extension SelectGenresViewController: UITableViewDataSource {
     public func numberOfSections(in tableView: UITableView) -> Int {   // Default is 1 if not implemented
         return 1
     }
+    
 }
 
 extension SelectGenresViewController: UITableViewDelegate {
@@ -159,7 +167,7 @@ extension SelectGenresViewController: UITableViewDelegate {
     
     // Called after the user changes the selection.
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        tableView.cellForRow(at: indexPath)?.check()
         let genre = self.genres[indexPath.row]
         if !self.selectedGenres.contains(where: { $0.id == genre.id }) {
             self.selectedGenres.append(genre)
@@ -167,14 +175,22 @@ extension SelectGenresViewController: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        tableView.cellForRow(at: indexPath)?.uncheck()
         let genre = self.genres[indexPath.row]
         self.selectedGenres.remove(at: selectedGenres.index(where: { $0.id == genre.id })!)
     }
     
 }
 
-
+extension UITableViewCell {
+    func check() {
+        self.imageView?.image = #imageLiteral(resourceName: "checked.png")
+    }
+    
+    func uncheck() {
+        self.imageView?.image = #imageLiteral(resourceName: "unchecked.png")
+    }
+}
 
 
 

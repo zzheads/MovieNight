@@ -13,7 +13,8 @@ struct Watcher {
     var weights: Weights?
     var genres: [Genre]?
     var actors: [Actor]?
-
+    var movieIdsByGenres: [Int]?
+    var movieIdsByActors: [Int]?
     
     init(name: String, weights: Weights? = nil, genres: [Genre]? = nil, actors: [Actor]? = nil) {
         self.name = name

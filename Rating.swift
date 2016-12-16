@@ -20,13 +20,6 @@ protocol Ratingable: Idable {
     var popularity: Double { get }
 }
 
-protocol WeightType {
-    var weightGenre: Float { get }
-    var weightActor: Float { get }
-    var weightNew: Float { get }
-    var weightPopularity: Float { get }
-}
-
 extension Array where Element: Ratingable {
     var minDate: Date? {
         if (!self.isEmpty) {
@@ -35,7 +28,7 @@ extension Array where Element: Ratingable {
             }
             for el in self {
                 guard let elDate = el.date else {
-                    return nil
+                    break
                 }
                 if elDate < minDate {
                     minDate = elDate
@@ -53,7 +46,7 @@ extension Array where Element: Ratingable {
             }
             for el in self {
                 guard let elDate = el.date else {
-                    return nil
+                    break
                 }
                 if elDate > maxDate {
                     maxDate = elDate
@@ -89,85 +82,36 @@ extension Array where Element: Ratingable {
         }
         return nil
     }
-    
-    func rating(index: Int, weights: WeightType?, genres: [Idable]?, actors: [KnownForType]?) -> Double? {
-        if index > self.count || index < 0 {
-            return nil
-        }
-        let element = self[index]
+        
+    func ratings(for watcher: Watcher) -> [Int: Double]? {
         guard
             let minDate = self.minDate,
             let maxDate = self.maxDate,
             let minPop = self.minPopularity,
             let maxPop = self.maxPopularity,
-            let weights = weights,
-            let genres = genres,
-            let actors = actors
+            let weights = watcher.weights
             else {
                 return nil
         }
         let weightGenre = weights.weightGenre
         let weightActor = weights.weightActor
         let weightDate = weights.weightNew
-        let weightPop = weights.weightPopularity
-        
-        var rating: Double = 0
-        for genre in genres {
-            if element.genreIds.contains(where: { $0 == genre.id }) {
-                rating += Double(weightGenre)
-            }
-        }
-        for actor in actors {
-            if actor.knownFor.contains(where: { $0.id == element.id }) {
-                rating += Double(weightActor)
-            }
-        }
-        let allIntervalDate = maxDate.timeIntervalSince(minDate)
-        if let valueDate = element.date {
-            let valueDateInterval = valueDate.timeIntervalSince(minDate)
-            rating += Double(weightDate) * (valueDateInterval / allIntervalDate)
-        }
-        
-        let allIntervalPop = maxPop - minPop
-        let valuePop = element.popularity - minPop
-        rating += Double(weightPop) * (valuePop / allIntervalPop)
-        
-        return rating
-    }
-    
-    func ratingBy(param: Double, min: Double, max: Double, weight: Double) -> Double {
-        return param * weight / (max - min)
-    }
-    
-    func ratings(weights: WeightType?, genres: [Idable]?, actors: [KnownForType]?) -> [Int: Double]? {
-        guard
-            let minDate = self.minDate,
-            let maxDate = self.maxDate,
-            let minPop = self.minPopularity,
-            let maxPop = self.maxPopularity,
-            let weights = weights,
-            let genres = genres,
-            let actors = actors
-            else {
-                return nil
-        }
-        let weightGenre = weights.weightGenre
-        let weightActor = weights.weightActor
-        let weightDate = weights.weightNew
-        let weightPop = weights.weightPopularity
+        let weightPop = weights.weightPopularity + 1
         
         var result: [Int: Double] = [:]
         
         for element in self {
             var rating: Double = 0
             
-            for genre in genres {
-                if element.genreIds.contains(where: { $0 == genre.id }) {
-                    rating += Double(weightGenre)
+            if let movieIdsByGenres = watcher.movieIdsByGenres {
+                for genreId in element.genreIds {
+                    if (movieIdsByGenres.contains(genreId)) {
+                        rating += Double(weightGenre)
+                    }
                 }
             }
-            for actor in actors {
-                if actor.knownFor.contains(where: { $0.id == element.id }) {
+            if let movieIdsByActors = watcher.movieIdsByActors {
+                if movieIdsByActors.contains(element.id) {
                     rating += Double(weightActor)
                 }
             }
@@ -186,10 +130,17 @@ extension Array where Element: Ratingable {
         return result
     }
     
-    func sortByRating(weights: WeightType?, genres: [Idable]?, actors: [KnownForType]?) -> [Ratingable]? {
-        guard let ratingsDict = self.ratings(weights: weights, genres: genres, actors: actors) else {
+    func sortByRating(for watcher: Watcher) -> [Ratingable]? {
+        guard let ratingsDict = self.ratings(for: watcher) else {
             return nil
         }
+        
+        for (key, value) in ratingsDict {
+            if (value >= 100) {
+                print("key(id)=\(key), value=\(value), movie=\((self.findById(id: key))?.title)")
+            }
+        }
+        
         let sortedIds = ratingsDict.keysSortedByValue(isOrderedBefore: { $0 > $1 })
         var result: [Ratingable] = []
         for id in sortedIds {

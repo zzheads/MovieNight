@@ -8,7 +8,7 @@
 
 import UIKit
 
-fileprivate let SLIDER_MAX: Float = 100.0
+fileprivate let SLIDER_MAX: Int = 100
 fileprivate let NUMBER_SLIDERS = 4
 
 class SelectWeightsViewController: UIViewController {
@@ -78,8 +78,8 @@ class SelectWeightsViewController: UIViewController {
                 slider.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: yOffset)
                 ])
             slider.minimumValue = 0.0
-            slider.maximumValue = SLIDER_MAX
-            slider.setValue(SLIDER_MAX / Float(NUMBER_SLIDERS), animated: true)
+            slider.maximumValue = Float(SLIDER_MAX)
+            slider.setValue(Float(SLIDER_MAX) / Float(NUMBER_SLIDERS), animated: true)
             slider.addTarget(self, action: #selector(sliderChanged(sender:)), for: .valueChanged)
             slider.tintColor = AppColors.Rose.color
             //slider.setThumbImage(#imageLiteral(resourceName: "appicon"), for: .normal)
@@ -92,28 +92,28 @@ class SelectWeightsViewController: UIViewController {
     }
     
     @objc func sliderChanged(sender: UISlider) {
-        var total: Float = 0
+        var total: Int = 0
         let numberOfSliders = self.sliders.count
         
         for i in 0..<self.sliders.count {
             let slider = self.sliders[i]
-            total += slider.value
+            total += Int(slider.value)
         }
         if (total > SLIDER_MAX) {
-            let diff: Float = total - SLIDER_MAX
-            let minusForEach: Float = diff / Float(numberOfSliders - 1)
+            let diff: Int = total - SLIDER_MAX
+            let minusForEach: Int = diff / Int(numberOfSliders - 1)
             for slider in self.sliders {
                 if (slider != sender) {
-                    slider.setValue(slider.value - minusForEach, animated: true)
+                    slider.setValue(Float(Int(slider.value) - minusForEach), animated: true)
                 }
             }
         }
         if (total < SLIDER_MAX) {
-            let diff: Float = SLIDER_MAX - total
-            let plusForEach: Float = diff / Float(numberOfSliders - 1)
+            let diff: Int = SLIDER_MAX - total
+            let plusForEach: Int = diff / Int(numberOfSliders - 1)
             for slider in self.sliders {
                 if (slider != sender) {
-                    slider.setValue(slider.value + plusForEach, animated: true)
+                    slider.setValue(Float(Int(slider.value) + plusForEach), animated: true)
                 }
             }
         }
@@ -129,10 +129,10 @@ class SelectWeightsViewController: UIViewController {
     }
     
     func donePressed(sender: UIBarButtonItem) {
-        let weightGenre = self.sliders[0].value
-        let weightActor = self.sliders[1].value
-        let weightNew = self.sliders[2].value
-        let weightPopularity = self.sliders[3].value
+        let weightGenre = Int(self.sliders[0].value)
+        let weightActor = Int(self.sliders[1].value)
+        let weightNew = Int(self.sliders[2].value)
+        let weightPopularity = Int(self.sliders[3].value)
         
         let weights = Weights(weightGenre: weightGenre, weightActor: weightActor, weightNew: weightNew, weightPopularity: weightPopularity)
         
@@ -146,10 +146,10 @@ class SelectWeightsViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         if (self.isMovingFromParentViewController){
-            let weightGenre = self.sliders[0].value
-            let weightActor = self.sliders[1].value
-            let weightNew = self.sliders[2].value
-            let weightPopularity = self.sliders[3].value
+            let weightGenre = Int(self.sliders[0].value)
+            let weightActor = Int(self.sliders[1].value)
+            let weightNew = Int(self.sliders[2].value)
+            let weightPopularity = Int(self.sliders[3].value)
             
             let weights = Weights(weightGenre: weightGenre, weightActor: weightActor, weightNew: weightNew, weightPopularity: weightPopularity)
             self.delegateModifyPrefs(weights, nil, nil)

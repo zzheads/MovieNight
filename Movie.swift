@@ -37,31 +37,31 @@ struct Movie: JSONDecodable, Idable {
     
     internal init?(JSON: JSON) {
         guard
-            let id = JSON["id"] as? Int,
-            let title = JSON["title"] as? String,
-            let adult = JSON["adult"] as? Bool,
-            let backdrop_path = JSON["backdrop_path"] as? String,
-            let budget = JSON["budget"] as? Int,
-            let genresJSONArray = JSON["genres"] as? [JSON],
-            let homepage = JSON["homepage"] as? String,
-            let imdb_id = JSON["imdb_id"] as? String,         //    minLength: 9 maxLength: 9     pattern: ^tt[0-9]{7}
-            let original_language = JSON["original_language"] as? String,
-            let original_title = JSON["original_title"] as? String,
-            let overview = JSON["overview"] as? String,
-            let popularity = JSON["popularity"] as? Double,
-            let poster_path = JSON["poster_path"] as? String,
-            let production_companiesJSONArray = JSON["production_companies"] as? [JSON],
-            let production_countriesJSONArray = JSON["production_countries"] as? [JSON],
-            let release_date = JSON["release_date"] as? String,
-            let revenue = JSON["revenue"] as? Int,
-            let runtime = JSON["runtime"] as? Int,
-            let spoken_languagesJSONArray = JSON["spoken_languages"] as? [JSON],
-            let status = JSON["status"] as? String,
-            let tagline = JSON["tagline"] as? String,
-            let video = JSON["video"] as? Bool,
-            let vote_average = JSON["vote_average"] as? Double,
-            let vote_count = JSON["vote_count"] as? Int
-            else {
+            let id = JSON["id"] as? Int,                                                    //
+            let title = JSON["title"] as? String,                                           //
+            let adult = JSON["adult"] as? Bool,                                             //
+            let backdrop_path = JSON["backdrop_path"] as? String,                           //
+            let budget = JSON["budget"] as? Int,                                            //
+            let genresJSONArray = JSON["genres"] as? [JSON],                                //
+            let homepage = JSON["homepage"] as? String,                                     //
+            let imdb_id = JSON["imdb_id"] as? String,                                       //    minLength: 9 maxLength: 9     pattern: ^tt[0-9]{7}
+            let original_language = JSON["original_language"] as? String,                   //
+            let original_title = JSON["original_title"] as? String,                         //
+            let overview = JSON["overview"] as? String,                                     //
+            let popularity = JSON["popularity"] as? Double,                                 //
+            let poster_path = JSON["poster_path"] as? String,                               //
+            let production_companiesJSONArray = JSON["production_companies"] as? [JSON],    //
+            let production_countriesJSONArray = JSON["production_countries"] as? [JSON],    //
+            let release_date = JSON["release_date"] as? String,                             //
+            let revenue = JSON["revenue"] as? Int,                                          //
+            let runtime = JSON["runtime"] as? Int,                                          //
+            let spoken_languagesJSONArray = JSON["spoken_languages"] as? [JSON],            //
+            let status = JSON["status"] as? String,                                         //
+            let tagline = JSON["tagline"] as? String,                                       //
+            let video = JSON["video"] as? Bool,                                             //
+            let vote_average = JSON["vote_average"] as? Double,                             //
+            let vote_count = JSON["vote_count"] as? Int                                     //
+            else {  
                 return nil
         }
         if let belongs_to_collectionJSONArray = JSON["belongs_to_collection"] as? [JSON] {

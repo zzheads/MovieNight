@@ -69,7 +69,11 @@ extension MovieHead: Ratingable {
     var date: Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        return dateFormatter.date(from: self.release_date)
+        let date = dateFormatter.date(from: self.release_date)
+        if date == nil {
+            print("Found zero date: id=\(self.id), title=\(self.title), release_date=\(self.release_date)")
+        }
+        return date
     }
     
     var genreIds: [Int] {

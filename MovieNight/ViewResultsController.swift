@@ -9,19 +9,14 @@
 import Foundation
 import UIKit
 
-fileprivate let cellIdentifier = "cell\(String(describing: ViewResultsController.self))"
+typealias Matcher = (element: MovieHead, inFirst: Int, inSecond: Int)
+fileprivate let margin = CGFloat(12)
 
 class ViewResultsController: UIViewController {
     
     let watchers: [Watcher]
-    
-    var results: [Result] = [] {
-        didSet {
-            if self.results.count >= 10 {
-                self.tableView.reloadData()
-            }
-        }
-    }
+        
+    var results: [Matcher] = []
     
     lazy var backgroundView: UIView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
@@ -59,7 +54,6 @@ class ViewResultsController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         self.navigationItem.title = "Best matches"
         self.navigationController?.toolbar.barStyle = .blackOpaque
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: " ", style: .plain, target: nil, action: nil)
@@ -68,53 +62,29 @@ class ViewResultsController: UIViewController {
         NSLayoutConstraint.activate([
             tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
             tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            tableView.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])        
         
-        apiClient.fetchPages(resourceType: ResourceType.Movie(.TopRated(pages: 20)), resourceClass: MovieHead.self) { movieHeads in
+        apiClient.fetchPages(resourceType: ResourceType.Movie(.Popular(pages: 40)), resourceClass: MovieHead.self) { movieHeads in
             guard
-                let sorted1 = movieHeads.sortByRating(weights: self.watchers[0].weights, genres: self.watchers[0].genres, actors: self.watchers[0].actors),
-                let sorted2 = movieHeads.sortByRating(weights: self.watchers[1].weights, genres: self.watchers[1].genres, actors: self.watchers[1].actors)
+                let sorted1 = movieHeads.sortByRating(for: self.watchers[0]),
+                let sorted2 = movieHeads.sortByRating(for: self.watchers[1])
                 else {
                     print("Error, cant't sort!")
                     return
             }
             
-            guard let bestMatches = self.findIntersectionBest(first: sorted1 as! [MovieHead], second: sorted2 as! [MovieHead], number: 10) else {
-                return
+            if let matchers = self.findIntersectionBest(first: sorted1 as! [MovieHead], second: sorted2 as! [MovieHead], number: 20) {
+                self.results = matchers
             }
-
-            self.apiClient.fetchResource(resource: ResourceType.Configuration, resourceClass: Configuration.self) { result in
-                switch result {
-                case .Success(let config):
-
-                    for match in bestMatches {
-                        let id = match.element.id
-                        self.apiClient.fetchResource(resource: ResourceType.Movie(.Images(id: id)), resourceClass: Image.self) { result in
-                            switch result {
-                            case .Success(let image):
-                                let result = Result(intersection: match, config: config, image: image)
-                                self.results.append(result)
-                                
-                            case .Failure(let error):
-                                print("\(error.localizedDescription)")
-                                return
-                            }
-                        }
-                    }
-                    
-                case .Failure(let error):
-                    print("\(error.localizedDescription)")
-                    return
-                }
-            }
-            
+            self.tableView.reloadData()
         }
     }
 }
 
 extension ViewResultsController {
+    
     func findIntersection(first: [MovieHead], second: [MovieHead]) -> [(element: MovieHead, inFirst: Int, inSecond: Int)]? {
         var result: [(element: MovieHead, inFirst: Int, inSecond: Int)] = []
         for i in 0..<first.count {
@@ -152,50 +122,72 @@ extension ViewResultsController: UITableViewDataSource {
     // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cellIdentifier = "cell\(String(describing: ViewResultsController.self))\(indexPath)"
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-
-        let movie = self.results[indexPath.row]
-        let image = movie.image
-        
-        image.translatesAutoresizingMaskIntoConstraints = false
-        cell.imageView?.image = image.image
-        cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 13)
-        cell.textLabel?.textColor = .white
-        cell.textLabel?.backgroundColor = .clear
-        cell.backgroundColor = .clear
-        cell.textLabel?.textAlignment = .justified
-        cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.text = String.init(format: "%@ ratings: %d; %d", movie.title, movie.ratings[0], movie.ratings[1])
-
-//        let label = UILabel()
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.text = String.init(format: "%@ ratings: %d; %d", movie.title, movie.ratings[0], movie.ratings[1])
-//        cell.contentView.addSubview(label)
-//        NSLayoutConstraint.activate([
-//            label.centerXAnchor.constraint(equalTo: cell.centerXAnchor),
-//            label.centerYAnchor.constraint(equalTo: cell.centerYAnchor)
-//            ])
-        
-        return cell
+        guard let oldCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) else {
+            let cell = UITableViewCell(style: UITableViewCellStyle.value2, reuseIdentifier: cellIdentifier)
+            
+            let matcher = self.results[indexPath.row]
+            var image: UIImageView
+            if (indexPath.row % 2 == 0) {
+                image = UIImageView(image: #imageLiteral(resourceName: "blue.png"))
+            } else {
+                image = UIImageView(image: #imageLiteral(resourceName: "lightBlue.png"))
+            }
+            
+            cell.contentView.addSubview(image)
+            image.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                image.leftAnchor.constraint(equalTo: cell.leftAnchor),
+                image.topAnchor.constraint(equalTo: cell.topAnchor),
+                image.widthAnchor.constraint(equalToConstant: 80),
+                image.heightAnchor.constraint(equalToConstant: 80)
+                ])
+            
+            let label = UILabel()
+            label.text = matcher.element.title
+            label.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(label)
+            NSLayoutConstraint.activate([
+                label.leftAnchor.constraint(equalTo: image.rightAnchor, constant: margin),
+                label.bottomAnchor.constraint(equalTo: cell.centerYAnchor),
+                label.rightAnchor.constraint(equalTo: cell.rightAnchor),
+                label.heightAnchor.constraint(equalToConstant: 40)
+                ])
+            
+            if let date = matcher.element.date {
+                let year = NSCalendar.current.component(.year, from: date)
+                let labelYear = UILabel()
+                labelYear.textColor = .gray
+                labelYear.text = "\(year)"
+                labelYear.translatesAutoresizingMaskIntoConstraints = false
+                cell.contentView.addSubview(labelYear)
+                NSLayoutConstraint.activate([
+                    labelYear.leftAnchor.constraint(equalTo: image.rightAnchor, constant: margin),
+                    labelYear.topAnchor.constraint(equalTo: cell.centerYAnchor),
+                    labelYear.rightAnchor.constraint(equalTo: cell.rightAnchor),
+                    labelYear.heightAnchor.constraint(equalToConstant: 40)
+                    ])
+            }
+            return cell
+        }
+        return oldCell
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {   // Default is 1 if not implemented
         return 1
     }
+    
 }
 
 extension ViewResultsController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let image = self.results[indexPath.row].image.image else {
-            return 0
-        }
-        return image.size.height
+        return 80
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movieDetailsViewController = MovieDetailsViewController(movieId: self.results[indexPath.row].id)
+        let movieDetailsViewController = MovieDetailsViewController(movieId: self.results[indexPath.row].element.id)
         self.navigationController?.pushViewController(movieDetailsViewController, animated: true)
     }
         

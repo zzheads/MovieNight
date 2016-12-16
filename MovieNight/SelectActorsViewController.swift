@@ -124,9 +124,17 @@ extension SelectActorsViewController: UITableViewDataSource {
         if self.actors.isEmpty {
             return cell
         }
+
+        cell.accessoryType = .none
+        cell.selectionStyle = .none
+        
+        if cell.isSelected {
+            cell.check()
+        } else {
+            cell.uncheck()
+        }
+        
         cell.textLabel?.text = self.actors[indexPath.row].name
-        cell.accessoryType = cell.isSelected ? .checkmark : .none
-        cell.selectionStyle = .default
         
         return cell
     }
@@ -154,7 +162,7 @@ extension SelectActorsViewController: UITableViewDelegate {
     
     // Called after the user changes the selection.
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        tableView.cellForRow(at: indexPath)?.check()
         let genre = self.actors[indexPath.row]
         if !self.selectedActors.contains(where: { $0.id == genre.id }) {
             self.selectedActors.append(genre)
@@ -162,7 +170,7 @@ extension SelectActorsViewController: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        tableView.cellForRow(at: indexPath)?.uncheck()
         let genre = self.actors[indexPath.row]
         self.selectedActors.remove(at: selectedActors.index(where: { $0.id == genre.id })!)
     }

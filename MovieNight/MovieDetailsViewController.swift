@@ -19,7 +19,6 @@ class MovieDetailsViewController: UIViewController {
     var config: Configuration?
     var movie: Movie?
     var credits: Credits?
-    var image: Image?
     
     lazy var backgroundImage: UIImageView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
@@ -30,12 +29,12 @@ class MovieDetailsViewController: UIViewController {
     var poster: UIImageView? {
         guard
             let config = self.config,
-            let image = self.image
+            let movie = self.movie
             else {
             return nil
         }
         let imageView = UIImageView()
-        let path = config.images.secure_base_url + config.images.poster_sizes[2] + image.posters[0].file_path
+        let path = config.images.secure_base_url + config.images.poster_sizes[2] + movie.poster_path
         imageView.downloadedFrom(link: path)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -50,7 +49,12 @@ class MovieDetailsViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 11)
         label.textColor = .white
         label.numberOfLines = 0
-        label.text = credits.description
+        var castText = "Cast: \n"
+        let maxLines = credits.cast.count > 5 ? 5 : credits.cast.count
+        for i in 0...maxLines {
+             castText += credits.cast[i].description + "\n"
+        }
+        label.text = castText
         return label
     }
     
@@ -90,57 +94,48 @@ class MovieDetailsViewController: UIViewController {
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])
         
-        self.apiClient.fetchResource(resource: ResourceType.Movie(.Details(id: self.movieId)), resourceClass: Movie.self) { result in
+        self.apiClient.fetchResource(resource: ResourceType.Configuration, resourceClass: Configuration.self) { result in
             switch result {
-            case .Success(let movie):
-                self.movie = movie
-                self.navigationItem.title = "\(movie.title)"
-
-                self.apiClient.fetchResource(resource: .Configuration, resourceClass: Configuration.self) { result in
+            case .Success(let config):
+                self.config = config
+                self.apiClient.fetchResource(resource: ResourceType.Movie(.Details(id: self.movieId)), resourceClass: Movie.self) { result in
                     switch result {
-                    case .Success(let config):
-                        self.config = config
+                    case .Success(let movie):
+                        self.movie = movie
+                        self.navigationItem.title = "\(movie.title)"
                         self.apiClient.fetchResource(resource: .Movie(.Credits(id: self.movieId)), resourceClass: Credits.self) { result in
                             switch result {
                             case .Success(let credits):
                                 self.credits = credits
-                                self.apiClient.fetchResource(resource: .Movie(.Images(id: self.movieId)), resourceClass: Image.self) { result in
-                                    switch result {
-                                    case .Success(let image):
-                                        self.image = image
-                                        self.showAll()
-                                    case .Failure(let error):
-                                        print("Fetching image: \(error.localizedDescription)")
-                                        return
-                                    }
-                                }
+                                self.showAll()
                             case .Failure(let error):
-                                print("Fetching credits: \(error.localizedDescription)")
-                                return
+                                print("Can not fetch credits: \(error.localizedDescription)")
                             }
                         }
                     case .Failure(let error):
-                        print("Fetching config: \(error.localizedDescription)")
-                        return
+                        print("Can not fetch configuration: \(error.localizedDescription)")
+                        break
                     }
                 }
+                
             case .Failure(let error):
-                print("Fetching movie: \(error.localizedDescription)")
-                return
+                print("Can not fetch movie: \(error.localizedDescription)")
+                break
             }
+            
         }
+        
     }
     
     func showAll() {
         guard
-        let poster = self.poster,
-        let image = self.image
+        let poster = self.poster
         else {
             return
         }
         
         let width = CGFloat(185)
-        let height = width / CGFloat(image.posters[0].aspect_ratio)
+        let height = CGFloat(185/0.777)
         
         self.view.addSubview(poster)
         NSLayoutConstraint.activate([

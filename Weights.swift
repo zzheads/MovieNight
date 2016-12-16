@@ -9,8 +9,15 @@
 import Foundation
 
 struct Weights: WeightType {
-    var weightGenre: Float
-    var weightActor: Float
-    var weightNew: Float
-    var weightPopularity: Float
+    var weightGenre: Int
+    var weightActor: Int
+    var weightNew: Int
+    var weightPopularity: Int
+}
+
+protocol WeightType {
+    var weightGenre: Int { get }
+    var weightActor: Int { get }
+    var weightNew: Int { get }
+    var weightPopularity: Int { get }
 }

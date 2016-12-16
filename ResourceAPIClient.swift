@@ -112,7 +112,7 @@ enum ResourceType: Endpoint {
             switch req {
             case .MovieList: path = "genre/movie/list"
             case .TVList: path = "genre/tv/list"
-            case .Movies(let id): path = "genre/\(id)/movies"
+            case .Movies(let id, _): path = "genre/\(id)/movies"
             }
         }
         

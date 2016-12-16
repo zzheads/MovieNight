@@ -29,6 +29,8 @@ class ViewController: UIViewController {
             }
             if watchers.allSet {
                 showResultsButton.isHidden = false
+            } else {
+                showResultsButton.isHidden = true
             }
         }
     }
@@ -42,7 +44,7 @@ class ViewController: UIViewController {
         button.layer.cornerRadius = 6
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
-        //button.isHidden = true
+        button.isHidden = true
         button.addTarget(self, action: #selector(viewResults), for: .touchUpInside)
         return button
     }()
@@ -107,14 +109,41 @@ class ViewController: UIViewController {
     }
     
     func modifyPrefs(weights: Weights?, genres: [Genre]?, actors: [Actor]?) {
+        let apiClient = ResourceAPIClient()
         if let weights = weights {
             self.watchers[currentWatcher].weights = weights
         }
         if let genres = genres {
             self.watchers[currentWatcher].genres = genres
+            for genre in genres {
+                apiClient.fetchPages(resourceType: ResourceType.Genre(.Movies(id: genre.id, pages: 10)), resourceClass: MovieHead.self) { movieHeads in
+                    if (self.watchers[self.currentWatcher].movieIdsByGenres == nil) {
+                        self.watchers[self.currentWatcher].movieIdsByGenres = []
+                    }
+                    for movieHead in movieHeads {
+                        self.watchers[self.currentWatcher].movieIdsByGenres?.append(movieHead.id)
+                    }
+                }
+            }
         }
         if let actors = actors {
             self.watchers[currentWatcher].actors = actors
+            for actor in actors {
+                apiClient.fetchResource(resource: ResourceType.Person(.MovieCredits(id: actor.id)), resourceClass: MovieCredits.self) { result in
+                    switch result {
+                    case .Success(let movieCredits):
+                        for movieCast in movieCredits.movieCast {
+                            if (self.watchers[self.currentWatcher].movieIdsByActors == nil) {
+                                self.watchers[self.currentWatcher].movieIdsByActors = []
+                            }
+                            self.watchers[self.currentWatcher].movieIdsByActors?.append(movieCast.id)
+                        }
+                    case .Failure(let error):
+                        print("Can not fetch credits for actor(\(actor.name)): \(error.localizedDescription)")
+                        break
+                    }
+                }
+            }
         }
     }
     
@@ -140,6 +169,8 @@ class ViewController: UIViewController {
             watchers[i].weights = nil
             watchers[i].genres = nil
             watchers[i].actors = nil
+            watchers[i].movieIdsByActors = nil
+            watchers[i].movieIdsByGenres = nil
         }
     }
 }
