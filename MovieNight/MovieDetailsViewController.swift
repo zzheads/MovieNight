@@ -55,26 +55,20 @@ class MovieDetailsViewController: UIViewController {
         return imageView
     }
     
-    var creditsLabel: UILabel? {
-        guard let credits = self.credits else {
-            return nil
-        }
+    lazy var creditsCharacter: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 13)
+        label.font = UIFont.boldSystemFont(ofSize: 17)
         label.textColor = .white
         label.numberOfLines = 0
-        var castText = "Cast: \n"
-        let maxLines = credits.cast.count > 5 ? 5 : credits.cast.count
-        for i in 0...maxLines {
-             castText += credits.cast[i].description + "\n"
-        }
-        label.text = castText
         return label
-    }
+    }()
     
     var descriptionLabel: UILabel? {
-        guard let movie = self.movie else {
+        guard
+            let movie = self.movie,
+            let credits = self.credits
+            else {
             return nil
         }
         let label = UILabel()
@@ -82,7 +76,21 @@ class MovieDetailsViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 13)
         label.textColor = .white
         label.numberOfLines = 0
-        label.text = "Released: \(movie.release_date)\n "
+        
+        var text = "Released: \(movie.release_date)\n"
+        if let directorName = credits.directorName {
+            text += "Director: \(directorName)\n"
+        }
+        if let screenplayName = credits.screenplayName {
+            text += "Screenplay: \(screenplayName)\n"
+        }
+        if let producerName = credits.producerName {
+            text += "Producer: \(producerName)\n"
+        }
+        text += "\n"
+        text += "Overview: \(movie.overview)"
+        
+        label.text = text
         return label
     }
     
@@ -152,7 +160,8 @@ class MovieDetailsViewController: UIViewController {
     
     func showAll() {
         guard
-        let poster = self.poster
+        let poster = self.poster,
+        let descriptionLabel = self.descriptionLabel
         else {
             return
         }
@@ -164,24 +173,33 @@ class MovieDetailsViewController: UIViewController {
         NSLayoutConstraint.activate([
             poster.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin),
             poster.widthAnchor.constraint(equalToConstant: width),
-            poster.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: margin),
+            poster.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: margin * 2),
             poster.heightAnchor.constraint(equalToConstant: height)
+            ])
+        
+        self.view.addSubview(descriptionLabel)
+        NSLayoutConstraint.activate([
+            descriptionLabel.leftAnchor.constraint(equalTo: poster.rightAnchor, constant: margin),
+            descriptionLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
+            descriptionLabel.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: margin),
+            descriptionLabel.bottomAnchor.constraint(equalTo: self.castPicker.topAnchor, constant: -margin),
             ])
         
         self.view.addSubview(self.castPicker)
         NSLayoutConstraint.activate([
             self.castPicker.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin),
             self.castPicker.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
-            self.castPicker.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: margin),
+            self.castPicker.topAnchor.constraint(equalTo: creditsCharacter.bottomAnchor, constant: margin),
             self.castPicker.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -margin),
             ])
+        
     }
 }
 
 extension MovieDetailsViewController: UIPickerViewDataSource {
     // returns the number of 'columns' to display.
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
+        return 2
     }
     
     // returns the # of rows in each component..
@@ -194,46 +212,42 @@ extension MovieDetailsViewController: UIPickerViewDataSource {
 }
 
 extension MovieDetailsViewController: UIPickerViewDelegate {
-    // returns width of column and height of row for each component.
-//    public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-//    }
-//    
-//    public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-//    }
+
+    public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return 150
+    }
     
-    // these methods return either a plain NSString, a NSAttributedString, or a view (e.g UILabel) to display the row for the component.
-    // for the view versions, we cache any hidden and thus unused views and pass them back for reuse.
-    // If you return back a different object, the old one will be released. the view will be centered in the row rect
-    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 12
+    }
+    
+    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         guard let castDict = self.castDict else {
             return nil
         }
-        return [String](castDict.keys)[row]
-    }
-    
-    public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        if view != nil {
-            return view!
+        let name = [String](castDict.keys)[row]
+        switch component {
+        case 0:
+            return NSAttributedString(string: name, attributes: [NSForegroundColorAttributeName : AppColors.Rose.color, NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
+        case 1:
+            guard let character = castDict[name] else {
+                return NSAttributedString(string: "Not found character for \(name)", attributes: [NSForegroundColorAttributeName : AppColors.Rose.color, NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
+            }
+            return NSAttributedString(string: character, attributes: [NSForegroundColorAttributeName : AppColors.LightBlue.color, NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
+        default:
+            return nil
         }
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 17)
-        label.backgroundColor = .clear
-        label.textColor = .black
-        label.textAlignment = NSTextAlignment.center
-        guard let castDict = self.castDict else {
-            return label
-        }
-        label.text = [String](castDict.keys)[row]
-        return label
     }
-    
     
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        guard let castDict = self.castDict else {
-            return
+        switch component {
+        case 0:
+            pickerView.selectRow(row, inComponent: 1, animated: true)
+        case 1:
+            pickerView.selectRow(row, inComponent: 0, animated: true)
+        default:
+            break
         }
-        let name = [String](castDict.keys)[row]
-        print("Show somewhere character \(castDict[name]!)")
     }
     
 }

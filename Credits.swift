@@ -48,3 +48,32 @@ extension Credits: CustomStringConvertible {
         return description
     }
 }
+
+extension Credits {
+    var directorName: String? {
+        for crew in self.crew {
+            if crew.job == "Director" {
+                return crew.name
+            }
+        }
+        return nil
+    }
+    
+    var screenplayName: String? {
+        for crew in self.crew {
+            if crew.job == "Screenplay" {
+                return crew.name
+            }
+        }
+        return nil
+    }
+    
+    var producerName: String? {
+        for crew in self.crew {
+            if crew.job == "Producer" {
+                return crew.name
+            }
+        }
+        return nil
+    }
+}
