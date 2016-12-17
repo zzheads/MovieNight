@@ -18,7 +18,22 @@ class MovieDetailsViewController: UIViewController {
     
     var config: Configuration?
     var movie: Movie?
-    var credits: Credits?
+    var credits: Credits? {
+        didSet {
+            guard let credits = self.credits else {
+                return
+            }
+            var result: [String: String] = [:]
+            for cast in credits.cast {
+                let name = cast.name
+                let character = cast.character
+                result.updateValue(character, forKey: name)
+            }
+            self.castDict = result
+        }
+    }
+    
+    var castDict: [String: String]?
     
     lazy var backgroundImage: UIImageView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
@@ -46,7 +61,7 @@ class MovieDetailsViewController: UIViewController {
         }
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 11)
+        label.font = UIFont.boldSystemFont(ofSize: 13)
         label.textColor = .white
         label.numberOfLines = 0
         var castText = "Cast: \n"
@@ -64,12 +79,20 @@ class MovieDetailsViewController: UIViewController {
         }
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 11)
+        label.font = UIFont.boldSystemFont(ofSize: 13)
         label.textColor = .white
         label.numberOfLines = 0
         label.text = "Released: \(movie.release_date)\n "
         return label
     }
+    
+    lazy var castPicker: UIPickerView = {
+        let picker = UIPickerView()
+        picker.dataSource = self
+        picker.delegate = self
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        return picker
+    }()
     
     init(movieId: Int) {
         self.movieId = movieId
@@ -145,15 +168,72 @@ class MovieDetailsViewController: UIViewController {
             poster.heightAnchor.constraint(equalToConstant: height)
             ])
         
-        guard let creditsLabel = self.creditsLabel else {
-            return
-        }
-        self.view.addSubview(creditsLabel)
+        self.view.addSubview(self.castPicker)
         NSLayoutConstraint.activate([
-            creditsLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin),
-            creditsLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
-            creditsLabel.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: margin),
-            creditsLabel.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -margin),
+            self.castPicker.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin),
+            self.castPicker.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
+            self.castPicker.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: margin),
+            self.castPicker.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -margin),
             ])
     }
+}
+
+extension MovieDetailsViewController: UIPickerViewDataSource {
+    // returns the number of 'columns' to display.
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    // returns the # of rows in each component..
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        guard let castDict = self.castDict else {
+            return 0
+        }
+        return castDict.keys.count
+    }
+}
+
+extension MovieDetailsViewController: UIPickerViewDelegate {
+    // returns width of column and height of row for each component.
+//    public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+//    }
+//    
+//    public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+//    }
+    
+    // these methods return either a plain NSString, a NSAttributedString, or a view (e.g UILabel) to display the row for the component.
+    // for the view versions, we cache any hidden and thus unused views and pass them back for reuse.
+    // If you return back a different object, the old one will be released. the view will be centered in the row rect
+    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        guard let castDict = self.castDict else {
+            return nil
+        }
+        return [String](castDict.keys)[row]
+    }
+    
+    public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        if view != nil {
+            return view!
+        }
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 17)
+        label.backgroundColor = .clear
+        label.textColor = .black
+        label.textAlignment = NSTextAlignment.center
+        guard let castDict = self.castDict else {
+            return label
+        }
+        label.text = [String](castDict.keys)[row]
+        return label
+    }
+    
+    
+    public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        guard let castDict = self.castDict else {
+            return
+        }
+        let name = [String](castDict.keys)[row]
+        print("Show somewhere character \(castDict[name]!)")
+    }
+    
 }
