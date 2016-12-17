@@ -182,15 +182,15 @@ class MovieDetailsViewController: UIViewController {
             descriptionLabel.leftAnchor.constraint(equalTo: poster.rightAnchor, constant: margin),
             descriptionLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
             descriptionLabel.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: margin),
-            descriptionLabel.bottomAnchor.constraint(equalTo: self.castPicker.topAnchor, constant: -margin),
+            descriptionLabel.bottomAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -margin)
             ])
         
         self.view.addSubview(self.castPicker)
         NSLayoutConstraint.activate([
             self.castPicker.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin),
             self.castPicker.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
-            self.castPicker.topAnchor.constraint(equalTo: creditsCharacter.bottomAnchor, constant: margin),
-            self.castPicker.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -margin),
+            self.castPicker.heightAnchor.constraint(equalToConstant: 15 * margin),
+            self.castPicker.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -margin)
             ])
         
     }
@@ -209,35 +209,48 @@ extension MovieDetailsViewController: UIPickerViewDataSource {
         }
         return castDict.keys.count
     }
+    
+    public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return UIFont.boldSystemFont(ofSize: 14).lineHeight
+    }
+
 }
 
 extension MovieDetailsViewController: UIPickerViewDelegate {
-
-    public func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
-        return 150
-    }
     
-    public func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 12
-    }
-    
-    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+    public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        if view != nil {
+            return view!
+        }
+        let view = UILabel()
+        view.font = UIFont.boldSystemFont(ofSize: 14)
         guard let castDict = self.castDict else {
-            return nil
+            return view
         }
         let name = [String](castDict.keys)[row]
+        var title: String
+        var color: UIColor
         switch component {
         case 0:
-            return NSAttributedString(string: name, attributes: [NSForegroundColorAttributeName : AppColors.Rose.color, NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
+            title = name
+            color = AppColors.Rose.color
         case 1:
             guard let character = castDict[name] else {
-                return NSAttributedString(string: "Not found character for \(name)", attributes: [NSForegroundColorAttributeName : AppColors.Rose.color, NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
+                title = "Not found character for \(name)"
+                color = .red
+                break
             }
-            return NSAttributedString(string: character, attributes: [NSForegroundColorAttributeName : AppColors.LightBlue.color, NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
+            title = character
+            color = AppColors.Blue.color
         default:
-            return nil
+            return view
         }
+        view.textColor = color
+        view.text = title
+        view.textAlignment = .left
+        return view
     }
+
     
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch component {
