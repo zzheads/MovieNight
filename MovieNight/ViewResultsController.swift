@@ -17,6 +17,7 @@ class ViewResultsController: UIViewController {
     let watchers: [Watcher]
         
     var results: [Matcher] = []
+    var ratings: [(forFirst: Double, forSecond: Double)] = []
     
     lazy var backgroundView: UIView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
@@ -106,8 +107,28 @@ class ViewResultsController: UIViewController {
                     return
             }
             
+            for movieId in self.watchers[0].movieIdsByActors! {
+                if movieHeads.contains(where: { $0.id == movieId }) {
+                    print(movieHeads.findById(id: movieId)?.title)
+                }
+            }
+            
             if let matchers = self.findIntersectionBest(first: sorted1 as! [MovieHead], second: sorted2 as! [MovieHead], number: 20) {
                 self.results = matchers
+                for match in matchers {
+                    let id = match.element.id
+                    if let index = movieHeads.index(where: { $0.id == id }) {
+                        guard
+                            let rating1 = movieHeads.rating(for: self.watchers[0], index: index),
+                            let rating2 = movieHeads.rating(for: self.watchers[0], index: index)
+                            else {
+                                self.ratings.append((forFirst: -1, forSecond: -1))
+                                break
+                        }
+                        let ratings = (forFirst: rating1, forSecond: rating2)
+                        self.ratings.append(ratings)
+                    }
+                }
             }
             self.tableView.reloadData()
             self.progress.stopAnimating()
@@ -165,6 +186,8 @@ extension ViewResultsController: UITableViewDataSource {
             let cell = UITableViewCell(style: UITableViewCellStyle.value2, reuseIdentifier: cellIdentifier)
             
             let matcher = self.results[indexPath.row]
+            let ratings = self.ratings[indexPath.row]
+            
             var image: UIImageView
             if (indexPath.row % 2 == 0) {
                 image = UIImageView(image: #imageLiteral(resourceName: "blue.png"))
@@ -182,7 +205,8 @@ extension ViewResultsController: UITableViewDataSource {
                 ])
             
             let label = UILabel()
-            label.text = matcher.element.title
+            label.font = UIFont.boldSystemFont(ofSize: 11)
+            label.text = "\(matcher.element.title) [\(matcher.inFirst) \(matcher.inSecond)]"
             label.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(label)
             NSLayoutConstraint.activate([
@@ -196,7 +220,9 @@ extension ViewResultsController: UITableViewDataSource {
                 let year = NSCalendar.current.component(.year, from: date)
                 let labelYear = UILabel()
                 labelYear.textColor = .gray
-                labelYear.text = "\(year)"
+                //labelYear.text = "\(year)"
+                labelYear.font = UIFont.boldSystemFont(ofSize: 11)
+                labelYear.text = String.init(format: "%.2f %.2f", ratings.forFirst, ratings.forSecond)
                 labelYear.translatesAutoresizingMaskIntoConstraints = false
                 cell.contentView.addSubview(labelYear)
                 NSLayoutConstraint.activate([

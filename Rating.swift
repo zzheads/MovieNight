@@ -82,7 +82,7 @@ extension Array where Element: Ratingable {
         }
         return nil
     }
-        
+    
     func ratings(for watcher: Watcher) -> [Int: Double]? {
         guard
             let minDate = self.minDate,
@@ -129,6 +129,49 @@ extension Array where Element: Ratingable {
         }
         return result
     }
+
+    func rating(for watcher: Watcher, index: Int) -> Double? {
+        guard
+            let minDate = self.minDate,
+            let maxDate = self.maxDate,
+            let minPop = self.minPopularity,
+            let maxPop = self.maxPopularity,
+            let weights = watcher.weights
+            else {
+                return nil
+        }
+        let weightGenre = weights.weightGenre
+        let weightActor = weights.weightActor
+        let weightDate = weights.weightNew
+        let weightPop = weights.weightPopularity + 1
+        
+        let element = self[index]
+        var rating: Double = 0
+        
+        if let movieIdsByGenres = watcher.movieIdsByGenres {
+            for genreId in element.genreIds {
+                if (movieIdsByGenres.contains(genreId)) {
+                    rating += Double(weightGenre)
+                }
+            }
+        }
+        if let movieIdsByActors = watcher.movieIdsByActors {
+            if movieIdsByActors.contains(element.id) {
+                rating += Double(weightActor)
+            }
+        }
+        let allIntervalDate = maxDate.timeIntervalSince(minDate)
+        if let valueDate = element.date {
+            let valueDateInterval = valueDate.timeIntervalSince(minDate)
+            rating += Double(weightDate) * (valueDateInterval / allIntervalDate)
+        }
+        
+        let allIntervalPop = maxPop - minPop
+        let valuePop = element.popularity - minPop
+        rating += Double(weightPop) * (valuePop / allIntervalPop)
+        
+        return rating
+    }
     
     func sortByRating(for watcher: Watcher) -> [Ratingable]? {
         guard let ratingsDict = self.ratings(for: watcher) else {
@@ -151,4 +194,3 @@ extension Array where Element: Ratingable {
         return result
     }
 }
-
