@@ -20,6 +20,8 @@ then decrease the value of the other three as long as the sum of all the sliders
 
 2) Then, each participant chooses five (some) genres (genres = [Genre]) and five (some) actors (actors = [Actor])
 
+<img src="Снимок экрана 2016-12-19 в 0.30.43.png">
+
 3) The requested topRated 100 films each are counting usefulMovie value for a particular member using the formula:
 
 > Watcher1: (weightGenre, weightActors, weightPopularity, weightNew), ([Genre], [Actor])
@@ -37,3 +39,7 @@ then decrease the value of the other three as long as the sum of all the sliders
 
 4) Find the intersection of arrays (sorted by useful) - create the final list and sorted according to the minimum amount
 position of the film in both lists.
+
+<img src="Снимок экрана 2016-12-19 в 0.31.17.png">
+<img src="Снимок экрана 2016-12-19 в 0.31.38.png">
+
