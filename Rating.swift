@@ -93,9 +93,9 @@ extension Array where Element: Ratingable {
             else {
                 return nil
         }
-        let weightGenre = weights.weightGenre
-        let weightActor = weights.weightActor
-        let weightDate = weights.weightNew
+        let weightGenre = weights.weightGenre + 1
+        let weightActor = weights.weightActor + 1
+        let weightDate = weights.weightNew + 1
         let weightPop = weights.weightPopularity + 1
         
         var result: [Int: Double] = [:]

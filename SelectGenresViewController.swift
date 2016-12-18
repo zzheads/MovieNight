@@ -63,7 +63,6 @@ class SelectGenresViewController: UIViewController {
         activity.hidesWhenStopped = true
         activity.activityIndicatorViewStyle = .whiteLarge
         activity.color = AppColors.Blue.color
-        activity.isHidden = true
         activity.translatesAutoresizingMaskIntoConstraints = false
         return activity
     }()

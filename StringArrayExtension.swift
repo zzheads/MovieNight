@@ -21,3 +21,16 @@ extension Sequence where Iterator.Element == String {
         return str
     }
 }
+
+extension Sequence where Iterator.Element == Int {
+    var toString: String {
+        var str = "";
+        for element in self {
+            str += "\(element), "
+        }
+        str = str.trimmingCharacters(in: CharacterSet.whitespaces)
+        str = String(str.characters.dropLast()) 
+        return str
+    }
+}
+

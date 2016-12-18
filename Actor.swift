@@ -42,3 +42,9 @@ extension Actor: KnownForType {
         return self.known_for
     }
 }
+
+extension Actor: Idable {
+    var title: String {
+        return name
+    }
+}

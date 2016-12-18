@@ -62,6 +62,7 @@ enum ResourceType: Endpoint {
     case Jobs
     case Search(SearchRequests)
     case Genre(GenreRequests)
+    case Discover(sort_by: String?, with_cast: String?, with_genres: String?, pages: Int)
     
     var baseURL: URL {
         return URL(string: "https://api.themoviedb.org/3/")!
@@ -115,20 +116,31 @@ enum ResourceType: Endpoint {
             case .TVList: path = "genre/tv/list"
             case .Movies(let id, _): path = "genre/\(id)/movies"
             }
+        case .Discover(_,_,_,_): path = "discover/movie"
         }
         
         if let key = keyAdd {
             path += "?api_key=\(key)"
         }
+        if let lang = langAdd {
+            path += "&language=\(lang)"
+        }
         if let query = queryAdd {
             path += "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)"
+        }
+        if let sortAdd = sortAdd {
+            path += "&sort_by=\(sortAdd)"
         }
         if let page = pageAdd {
             path += "&page=\(page)"
         }
-        if let lang = langAdd {
-            path += "&language=\(lang)"
+        if let castAdd = castAdd {
+            path += "&with_cast=\(castAdd.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)"
         }
+        if let genresAdd = genresAdd {
+            path += "&with_genres=\(genresAdd.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)"
+        }
+        
         return path
     }
     
@@ -158,6 +170,27 @@ enum ResourceType: Endpoint {
         }
     }
     
+    var sortAdd: String? {
+        switch self {
+        case .Discover(_,_,_,_): return "popularity.desc" // TODO:
+        default: return nil
+        }
+    }
+    
+    var castAdd: String? {
+        switch self {
+        case .Discover(_, let with_cast,_,_): return with_cast
+        default: return nil
+        }
+    }
+
+    var genresAdd: String? {
+        switch self {
+        case .Discover(_, _, let with_genres,_): return with_genres
+        default: return nil
+        }
+    }
+    
     var pageAdd: Int? {
         switch self {
         case .Search(let searchReq):
@@ -175,6 +208,7 @@ enum ResourceType: Endpoint {
             default: return nil
             }
         case .Person(.Popular(let page)): return page
+        case .Discover(_,_,_,let page): return page
         default: return nil
         }
     }
@@ -225,6 +259,7 @@ extension ResourceType: CustomStringConvertible {
         case .Person(_): return "Person"
         case .Search(_): return "Search"
         case .Timezones: return "Timezones"
+        case .Discover(_,_,_,_): return "Discover"
         default: return "Unknown: \(self)"
         }
     }
@@ -293,6 +328,8 @@ final class ResourceAPIClient: APIClient {
             case .Genre(.Movies(let id, _)): resourceTypeWithPage = .Genre(.Movies(id: id, pages: pageNumber))
                 
             case .Person(.Popular(_)): resourceTypeWithPage = .Person(.Popular(pages: pageNumber))
+                
+            case .Discover(let sort_by, let with_cast,let with_genres,_): resourceTypeWithPage = .Discover(sort_by: sort_by, with_cast: with_cast, with_genres: with_genres, pages: pageNumber)
                 
             default: break
             }

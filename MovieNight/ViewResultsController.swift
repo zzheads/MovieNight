@@ -15,7 +15,9 @@ fileprivate let margin = CGFloat(12)
 class ViewResultsController: UIViewController {
     
     let watchers: [Watcher]
-        
+    var moviesList: [MovieHead] = []
+    var genresForBoth: [Genre] = []
+    var actorsForBoth: [Actor] = []
     var results: [Matcher] = []
     var ratings: [(forFirst: Double, forSecond: Double)] = []
     
@@ -98,44 +100,57 @@ class ViewResultsController: UIViewController {
             ])
         
         self.progress.startAnimating()
-        apiClient.fetchPages(resourceType: ResourceType.Movie(.Popular(pages: 40)), resourceClass: MovieHead.self, progress: setProgress(value: )) { movieHeads in
-            guard
-                let sorted1 = movieHeads.sortByRating(for: self.watchers[0]),
-                let sorted2 = movieHeads.sortByRating(for: self.watchers[1])
-                else {
-                    print("Error, cant't sort!")
-                    return
+        
+        for watcher in watchers {
+            if let genres = watcher.genres {
+                genresForBoth.append(contentsOf: genres)
             }
-            
-            for movieId in self.watchers[0].movieIdsByActors! {
-                if movieHeads.contains(where: { $0.id == movieId }) {
-                    print(movieHeads.findById(id: movieId)?.title)
-                }
+            if let actors = watcher.actors {
+                actorsForBoth.append(contentsOf: actors)
             }
-            
-            if let matchers = self.findIntersectionBest(first: sorted1 as! [MovieHead], second: sorted2 as! [MovieHead], number: 20) {
-                self.results = matchers
-                for match in matchers {
-                    let id = match.element.id
-                    if let index = movieHeads.index(where: { $0.id == id }) {
+        }
+
+        for i in 0..<self.genresForBoth.count {
+            let genre = self.genresForBoth[i]
+            self.apiClient.fetchPages(resourceType: ResourceType.Genre(.Movies(id: genre.id, pages: 10)), resourceClass: MovieHead.self) { movieHeads in
+                self.moviesList.append(contentsOf: movieHeads)
+                if (i == self.genresForBoth.count - 1) {
+                    self.apiClient.fetchPages(resourceType: ResourceType.Discover(sort_by: nil, with_cast: self.actorsForBoth.stringWithIds, with_genres: nil, pages: 39), resourceClass: MovieHead.self) { movieHeads in
+                        self.moviesList.append(contentsOf: movieHeads)
                         guard
-                            let rating1 = movieHeads.rating(for: self.watchers[0], index: index),
-                            let rating2 = movieHeads.rating(for: self.watchers[0], index: index)
+                            let sorted1 = self.moviesList.sortByRating(for: self.watchers[0]),
+                            let sorted2 = self.moviesList.sortByRating(for: self.watchers[1])
                             else {
-                                self.ratings.append((forFirst: -1, forSecond: -1))
-                                break
+                                print("Error, cant't sort!")
+                                return
                         }
-                        let ratings = (forFirst: rating1, forSecond: rating2)
-                        self.ratings.append(ratings)
+                        
+                        if let matchers = self.findIntersectionBest(first: sorted1 as! [MovieHead], second: sorted2 as! [MovieHead], number: 20) {
+                            self.results = matchers
+                            for match in matchers {
+                                let id = match.element.id
+                                if let index = self.moviesList.index(where: { $0.id == id }) {
+                                    guard
+                                        let rating1 = self.moviesList.rating(for: self.watchers[0], index: index),
+                                        let rating2 = self.moviesList.rating(for: self.watchers[0], index: index)
+                                        else {
+                                            self.ratings.append((forFirst: -1, forSecond: -1))
+                                            break
+                                    }
+                                    let ratings = (forFirst: rating1, forSecond: rating2)
+                                    self.ratings.append(ratings)
+                                }
+                            }
+                        }
+                        self.tableView.reloadData()
+                        self.progress.stopAnimating()
+                        self.progressBar.isHidden = true
                     }
                 }
             }
-            self.tableView.reloadData()
-            self.progress.stopAnimating()
-            self.progressBar.isHidden = true
         }
     }
-    
+        
     func setProgress(value: Float) {
         self.progressBar.setProgress(value, animated: true)
     }
@@ -163,7 +178,8 @@ extension ViewResultsController {
             return nil
         }
         let sorted = intersection.sorted(by: { ($0.inFirst + $0.inSecond) < ($1.inFirst + $1.inSecond) })
-        for i in 0...number {
+        let maxCount = number > sorted.count ? sorted.count : number
+        for i in 0...maxCount {
             result.append(sorted[i])
         }
         return result

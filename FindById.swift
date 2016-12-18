@@ -22,4 +22,16 @@ extension Array where Element: Idable {
         }
         return nil
     }
+    
+    var stringWithIds: String? {
+        if self.isEmpty {
+            return nil
+        }
+        var string = ""
+        for elem in self {
+            string += "\(elem.id), "
+        }
+        let result = String(string.trimmingCharacters(in: .whitespaces).characters.dropLast())
+        return result
+    }
 }
