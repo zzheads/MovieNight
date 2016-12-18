@@ -9,7 +9,8 @@
 - The actors involved in the film (weightActors)
 - The popularity of the film (weightPopularity)
 - Prescription of the film's release (weightNew)
-<img src="">
+
+<img src="Снимок экрана 2016-12-19 в 0.30.21.png">
 
 
 And the sum of all weights must be equal to 1. (weightGenre + weightActors + weightPopularity + weightNew = 1.0)
