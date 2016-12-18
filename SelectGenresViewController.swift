@@ -12,7 +12,7 @@ import UIKit
 fileprivate let cellIdentifier = "cell\(String(describing: SelectGenresViewController.self))"
 
 class SelectGenresViewController: UIViewController {
-    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?) -> Void
+    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void
 
     var genres: [Genre] = []
     var selectedGenres: [Genre] = [] {
@@ -55,11 +55,21 @@ class SelectGenresViewController: UIViewController {
     lazy var doneBarButton: UIBarButtonItem = {
         let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(donePressed(sender:)))
         return button
-    }()    
+    }()
+    
+    lazy var progress: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView()
+        activity.hidesWhenStopped = true
+        activity.color = AppColors.LightBlue.color
+        activity.activityIndicatorViewStyle = .whiteLarge
+        activity.isHidden = true
+        activity.translatesAutoresizingMaskIntoConstraints = false
+        return activity
+    }()
     
     let apiClient = ResourceAPIClient()
     
-    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?) -> Void) {
+    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void) {
         self.delegateModifyPrefs = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -84,6 +94,12 @@ class SelectGenresViewController: UIViewController {
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])
         
+        self.view.addSubview(self.progress)
+        NSLayoutConstraint.activate([
+            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            ])        
+        
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
             tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
@@ -107,7 +123,7 @@ class SelectGenresViewController: UIViewController {
     }
     
     func donePressed(sender: UIBarButtonItem) {
-        self.delegateModifyPrefs(nil, self.selectedGenres, nil)
+        self.delegateModifyPrefs(nil, self.selectedGenres, nil, self.progress)
         
         let selectActorsController = SelectActorsViewController(delegate: self.delegateModifyPrefs)
         self.navigationController?.pushViewController(selectActorsController, animated: true)

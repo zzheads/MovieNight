@@ -12,7 +12,7 @@ import UIKit
 fileprivate let cellIdentifier = "cell\(String(describing: SelectActorsViewController.self))"
 
 class SelectActorsViewController: UIViewController {
-    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?) -> Void
+    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void
     
     var actors: [Actor] = []
     var selectedActors: [Actor] = [] {
@@ -57,9 +57,19 @@ class SelectActorsViewController: UIViewController {
         return button
     }()
     
+    lazy var progress: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView()
+        activity.hidesWhenStopped = true
+        activity.color = AppColors.LightBlue.color
+        activity.activityIndicatorViewStyle = .whiteLarge
+        activity.isHidden = true
+        activity.translatesAutoresizingMaskIntoConstraints = false
+        return activity
+    }()
+    
     let apiClient = ResourceAPIClient()
     
-    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?) -> Void) {
+    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void) {
         self.delegateModifyPrefs = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -84,6 +94,12 @@ class SelectActorsViewController: UIViewController {
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])
         
+        self.view.addSubview(self.progress)
+        NSLayoutConstraint.activate([
+            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            ])
+        
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
             tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
@@ -101,7 +117,7 @@ class SelectActorsViewController: UIViewController {
     }
     
     func donePressed(sender: UIBarButtonItem) {
-        self.delegateModifyPrefs(nil, nil, self.selectedActors)
+        self.delegateModifyPrefs(nil, nil, self.selectedActors, self.progress)
         
         if let rootViewController = self.navigationController?.popToRootViewController(animated: true)?[0] {
             self.navigationController?.pushViewController(rootViewController, animated: true)

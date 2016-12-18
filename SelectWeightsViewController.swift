@@ -13,7 +13,7 @@ fileprivate let NUMBER_SLIDERS = 4
 
 class SelectWeightsViewController: UIViewController {
     
-    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?) -> Void
+    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void
     
     lazy var backgroundImage: UIImageView = {
         let image = UIImageView(image: #imageLiteral(resourceName: "bg-iphone6.png"))
@@ -32,7 +32,17 @@ class SelectWeightsViewController: UIViewController {
         return button
     }()
     
-    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?) -> Void) {
+    lazy var progress: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView()
+        activity.hidesWhenStopped = true
+        activity.color = AppColors.LightBlue.color
+        activity.activityIndicatorViewStyle = .whiteLarge
+        activity.isHidden = true
+        activity.translatesAutoresizingMaskIntoConstraints = false
+        return activity
+    }()
+    
+    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void) {
         self.delegateModifyPrefs = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -53,6 +63,12 @@ class SelectWeightsViewController: UIViewController {
             backgroundImage.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             backgroundImage.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
+            ])
+        
+        self.view.addSubview(self.progress)
+        NSLayoutConstraint.activate([
+            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
             ])
         
         for i in 0..<NUMBER_SLIDERS {
@@ -136,7 +152,7 @@ class SelectWeightsViewController: UIViewController {
         
         let weights = Weights(weightGenre: weightGenre, weightActor: weightActor, weightNew: weightNew, weightPopularity: weightPopularity)
         
-        self.delegateModifyPrefs(weights, nil, nil)
+        self.delegateModifyPrefs(weights, nil, nil, self.progress)
         
         let selectGenresController = SelectGenresViewController(delegate: self.delegateModifyPrefs)
         self.navigationController?.pushViewController(selectGenresController, animated: true)
@@ -152,7 +168,7 @@ class SelectWeightsViewController: UIViewController {
             let weightPopularity = Int(self.sliders[3].value)
             
             let weights = Weights(weightGenre: weightGenre, weightActor: weightActor, weightNew: weightNew, weightPopularity: weightPopularity)
-            self.delegateModifyPrefs(weights, nil, nil)
+            self.delegateModifyPrefs(weights, nil, nil, self.progress)
         }
     }
     

@@ -41,6 +41,16 @@ class ViewResultsController: UIViewController {
         return table
     }()
     
+    lazy var progress: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView()
+        activity.hidesWhenStopped = true
+        activity.color = AppColors.LightBlue.color
+        activity.activityIndicatorViewStyle = .whiteLarge
+        activity.isHidden = true
+        activity.translatesAutoresizingMaskIntoConstraints = false
+        return activity
+    }()    
+    
     let apiClient = ResourceAPIClient()
     
     init(watchers: [Watcher]) {
@@ -64,8 +74,15 @@ class ViewResultsController: UIViewController {
             tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
-            ])        
+            ])
         
+        self.view.addSubview(self.progress)
+        NSLayoutConstraint.activate([
+            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            ])
+        
+        self.progress.startAnimating()
         apiClient.fetchPages(resourceType: ResourceType.Movie(.Popular(pages: 40)), resourceClass: MovieHead.self) { movieHeads in
             guard
                 let sorted1 = movieHeads.sortByRating(for: self.watchers[0]),
@@ -79,6 +96,7 @@ class ViewResultsController: UIViewController {
                 self.results = matchers
             }
             self.tableView.reloadData()
+            self.progress.stopAnimating()
         }
     }
 }
@@ -187,7 +205,7 @@ extension ViewResultsController: UITableViewDelegate {
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movieDetailsViewController = MovieDetailsViewController(movieId: self.results[indexPath.row].element.id)
+        let movieDetailsViewController = MovieDetailsViewController(movieId: self.results[indexPath.row].element.id, watchers: self.watchers)
         self.navigationController?.pushViewController(movieDetailsViewController, animated: true)
     }
         

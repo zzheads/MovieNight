@@ -14,7 +14,9 @@ fileprivate let margin = CGFloat(8)
 class MovieDetailsViewController: UIViewController {
     
     let movieId: Int
+    let watchers: [Watcher]
     let apiClient = ResourceAPIClient()
+    var selectedActors: [Actor] = []
     
     var config: Configuration?
     var movie: Movie?
@@ -76,6 +78,7 @@ class MovieDetailsViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 13)
         label.textColor = .white
         label.numberOfLines = 0
+        label.textAlignment = .left
         
         var text = "Released: \(movie.release_date)\n"
         if let directorName = credits.directorName {
@@ -87,10 +90,37 @@ class MovieDetailsViewController: UIViewController {
         if let producerName = credits.producerName {
             text += "Producer: \(producerName)\n"
         }
-        text += "\n"
-        text += "Overview: \(movie.overview)"
+        text += String.init(format: "Popularity: %.2f\n", movie.popularity)
+        text += String.init(format: "Budget: $%d\n", movie.budget)
+        text += String.init(format: "Revenue: $%d\n", movie.revenue)
         
         label.text = text
+        return label
+    }
+    
+    lazy var castLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 13)
+        label.textColor = .gray
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = "Cast:"
+        return label
+    }()
+    
+    var overviewLabel: UILabel? {
+        guard
+            let movie = self.movie
+            else {
+                return nil
+        }
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 13)
+        label.textColor = .white
+        label.numberOfLines = 0
+        label.text = movie.overview
         return label
     }
     
@@ -102,8 +132,26 @@ class MovieDetailsViewController: UIViewController {
         return picker
     }()
     
-    init(movieId: Int) {
+    lazy var progress: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView()
+        activity.hidesWhenStopped = true
+        activity.color = AppColors.LightBlue.color
+        activity.activityIndicatorViewStyle = .whiteLarge
+        activity.isHidden = true
+        activity.translatesAutoresizingMaskIntoConstraints = false
+        return activity
+    }()
+    
+    init(movieId: Int, watchers: [Watcher]) {
         self.movieId = movieId
+        self.watchers = watchers
+        for watcher in watchers {
+            if let actors = watcher.actors {
+                for actor in actors {
+                    self.selectedActors.append(actor)
+                }
+            }
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -125,6 +173,13 @@ class MovieDetailsViewController: UIViewController {
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])
         
+        self.view.addSubview(self.progress)
+        NSLayoutConstraint.activate([
+            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            ])
+        
+        self.progress.startAnimating()
         self.apiClient.fetchResource(resource: ResourceType.Configuration, resourceClass: Configuration.self) { result in
             switch result {
             case .Success(let config):
@@ -139,6 +194,7 @@ class MovieDetailsViewController: UIViewController {
                             case .Success(let credits):
                                 self.credits = credits
                                 self.showAll()
+                                self.progress.stopAnimating()
                             case .Failure(let error):
                                 print("Can not fetch credits: \(error.localizedDescription)")
                             }
@@ -161,35 +217,47 @@ class MovieDetailsViewController: UIViewController {
     func showAll() {
         guard
         let poster = self.poster,
-        let descriptionLabel = self.descriptionLabel
+        let descriptionLabel = self.descriptionLabel,
+        let overviewLabel = self.overviewLabel
         else {
             return
         }
         
-        let width = CGFloat(185)
-        let height = CGFloat(185/0.777)
-        
         self.view.addSubview(poster)
         NSLayoutConstraint.activate([
             poster.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin),
-            poster.widthAnchor.constraint(equalToConstant: width),
-            poster.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: margin * 2),
-            poster.heightAnchor.constraint(equalToConstant: height)
+            poster.rightAnchor.constraint(equalTo: self.view.centerXAnchor),
+            poster.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: margin),
+            poster.bottomAnchor.constraint(equalTo: self.view.centerYAnchor)
             ])
         
         self.view.addSubview(descriptionLabel)
         NSLayoutConstraint.activate([
             descriptionLabel.leftAnchor.constraint(equalTo: poster.rightAnchor, constant: margin),
             descriptionLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
-            descriptionLabel.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor, constant: margin),
-            descriptionLabel.bottomAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -margin)
+            descriptionLabel.topAnchor.constraint(equalTo: poster.topAnchor)
+            ])
+        
+        self.view.addSubview(overviewLabel)
+        NSLayoutConstraint.activate([
+            overviewLabel.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin),
+            overviewLabel.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
+            overviewLabel.topAnchor.constraint(equalTo: poster.bottomAnchor, constant: margin),
+            overviewLabel.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -UIScreen.main.bounds.size.height / 4)
+            ])
+        
+        self.view.addSubview(castLabel)
+        NSLayoutConstraint.activate([
+            castLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            castLabel.topAnchor.constraint(equalTo: overviewLabel.bottomAnchor, constant: margin),
+            castLabel.heightAnchor.constraint(equalToConstant: castLabel.font.lineHeight)
             ])
         
         self.view.addSubview(self.castPicker)
         NSLayoutConstraint.activate([
             self.castPicker.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin),
             self.castPicker.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin),
-            self.castPicker.heightAnchor.constraint(equalToConstant: 15 * margin),
+            self.castPicker.topAnchor.constraint(equalTo: castLabel.bottomAnchor, constant: margin),
             self.castPicker.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor, constant: -margin)
             ])
         
@@ -233,7 +301,10 @@ extension MovieDetailsViewController: UIPickerViewDelegate {
         switch component {
         case 0:
             title = name
-            color = AppColors.Rose.color
+            color = .white
+            if self.selectedActors.contains(where: { $0.name.uppercased() == name.uppercased() }) {
+                color = AppColors.Rose.color
+            }
         case 1:
             guard let character = castDict[name] else {
                 title = "Not found character for \(name)"
@@ -241,13 +312,13 @@ extension MovieDetailsViewController: UIPickerViewDelegate {
                 break
             }
             title = character
-            color = AppColors.Blue.color
+            color = .white
         default:
             return view
         }
         view.textColor = color
         view.text = title
-        view.textAlignment = .left
+        view.textAlignment = .center
         return view
     }
 
