@@ -72,6 +72,15 @@ class ViewController: UIViewController {
         return buttons
     }()
     
+    lazy var progress: UIActivityIndicatorView = {
+        let activity = UIActivityIndicatorView()
+        activity.hidesWhenStopped = true
+        activity.activityIndicatorViewStyle = .whiteLarge
+        activity.isHidden = true
+        activity.translatesAutoresizingMaskIntoConstraints = false
+        return activity
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Movie Night"
@@ -108,7 +117,8 @@ class ViewController: UIViewController {
         
     }
     
-    func modifyPrefs(weights: Weights?, genres: [Genre]?, actors: [Actor]?, activityIndicator: UIActivityIndicatorView) {
+    func modifyPrefs(weights: Weights?, genres: [Genre]?, actors: [Actor]?, view: UIView) {
+        
         let apiClient = ResourceAPIClient()
         if let weights = weights {
             self.watchers[currentWatcher].weights = weights
@@ -116,9 +126,6 @@ class ViewController: UIViewController {
         if let genres = genres {
             self.watchers[currentWatcher].genres = genres
             for genre in genres {
-                activityIndicator.isHidden = false
-                activityIndicator.startAnimating()
-
                 apiClient.fetchPages(resourceType: ResourceType.Genre(.Movies(id: genre.id, pages: 10)), resourceClass: MovieHead.self) { movieHeads in
                     if (self.watchers[self.currentWatcher].movieIdsByGenres == nil) {
                         self.watchers[self.currentWatcher].movieIdsByGenres = []
@@ -126,14 +133,12 @@ class ViewController: UIViewController {
                     for movieHead in movieHeads {
                         self.watchers[self.currentWatcher].movieIdsByGenres?.append(movieHead.id)
                     }
-                    activityIndicator.stopAnimating()
                 }
             }
         }
         if let actors = actors {
             self.watchers[currentWatcher].actors = actors
             for actor in actors {
-                activityIndicator.startAnimating()
                 apiClient.fetchResource(resource: ResourceType.Person(.MovieCredits(id: actor.id)), resourceClass: MovieCredits.self) { result in
                     switch result {
                     case .Success(let movieCredits):
@@ -142,7 +147,6 @@ class ViewController: UIViewController {
                                 self.watchers[self.currentWatcher].movieIdsByActors = []
                             }
                             self.watchers[self.currentWatcher].movieIdsByActors?.append(movieCast.id)
-                            activityIndicator.stopAnimating()
                         }
                     case .Failure(let error):
                         print("Can not fetch credits for actor(\(actor.name)): \(error.localizedDescription)")
@@ -161,7 +165,7 @@ class ViewController: UIViewController {
             }
         }
         
-        let selectWeightsController = SelectWeightsViewController(delegate: modifyPrefs)
+        let selectWeightsController = SelectWeightsViewController(delegate: modifyPrefs, currentWatcher: watchers[currentWatcher])
         self.navigationController?.pushViewController(selectWeightsController, animated: true)
     }
     

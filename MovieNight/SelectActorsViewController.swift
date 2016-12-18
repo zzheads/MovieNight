@@ -12,7 +12,8 @@ import UIKit
 fileprivate let cellIdentifier = "cell\(String(describing: SelectActorsViewController.self))"
 
 class SelectActorsViewController: UIViewController {
-    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void
+    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?, UIView) -> Void
+    var watcher: Watcher
     
     var actors: [Actor] = []
     var selectedActors: [Actor] = [] {
@@ -60,8 +61,8 @@ class SelectActorsViewController: UIViewController {
     lazy var progress: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView()
         activity.hidesWhenStopped = true
-        activity.color = AppColors.LightBlue.color
         activity.activityIndicatorViewStyle = .whiteLarge
+        activity.color = AppColors.Blue.color
         activity.isHidden = true
         activity.translatesAutoresizingMaskIntoConstraints = false
         return activity
@@ -69,8 +70,12 @@ class SelectActorsViewController: UIViewController {
     
     let apiClient = ResourceAPIClient()
     
-    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void) {
+    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?, UIView) -> Void, watcher: Watcher) {
         self.delegateModifyPrefs = delegate
+        self.watcher = watcher
+        if let actors = watcher.actors {
+            self.selectedActors = actors
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -94,12 +99,6 @@ class SelectActorsViewController: UIViewController {
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])
         
-        self.view.addSubview(self.progress)
-        NSLayoutConstraint.activate([
-            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
-            ])
-        
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
             tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
@@ -108,17 +107,32 @@ class SelectActorsViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])
         
+        self.view.addSubview(self.progress)
+        NSLayoutConstraint.activate([
+            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            ])
+        
+        self.progress.startAnimating()
         apiClient.fetchPages(resourceType: .Person(.Popular(pages: 10)), resourceClass: Actor.self) { actors in
             for actor in actors {
                 self.actors.append(actor)
             }
             self.tableView.reloadData()
+            for actor in self.selectedActors {
+                if let index = self.actors.index(where: { $0.id == actor.id }) {
+                    let indexPath = IndexPath(row: index, section: 0)
+                    self.tableView.cellForRow(at: indexPath)?.setSelected(true, animated: true)
+                    self.tableView.cellForRow(at: indexPath)?.check()
+                }
+            }
+            self.progress.stopAnimating()
         }
     }
     
     func donePressed(sender: UIBarButtonItem) {
-        self.delegateModifyPrefs(nil, nil, self.selectedActors, self.progress)
-        
+        self.delegateModifyPrefs(nil, nil, self.selectedActors, self.view)
+        self.watcher.actors = self.selectedActors
         if let rootViewController = self.navigationController?.popToRootViewController(animated: true)?[0] {
             self.navigationController?.pushViewController(rootViewController, animated: true)
         }

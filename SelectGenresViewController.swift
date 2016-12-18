@@ -12,7 +12,8 @@ import UIKit
 fileprivate let cellIdentifier = "cell\(String(describing: SelectGenresViewController.self))"
 
 class SelectGenresViewController: UIViewController {
-    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void
+    let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?, UIView) -> Void
+    let watcher: Watcher
 
     var genres: [Genre] = []
     var selectedGenres: [Genre] = [] {
@@ -60,8 +61,8 @@ class SelectGenresViewController: UIViewController {
     lazy var progress: UIActivityIndicatorView = {
         let activity = UIActivityIndicatorView()
         activity.hidesWhenStopped = true
-        activity.color = AppColors.LightBlue.color
         activity.activityIndicatorViewStyle = .whiteLarge
+        activity.color = AppColors.Blue.color
         activity.isHidden = true
         activity.translatesAutoresizingMaskIntoConstraints = false
         return activity
@@ -69,8 +70,12 @@ class SelectGenresViewController: UIViewController {
     
     let apiClient = ResourceAPIClient()
     
-    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?, UIActivityIndicatorView) -> Void) {
+    init(delegate: @escaping (Weights?, [Genre]?, [Actor]?, UIView) -> Void, watcher: Watcher) {
         self.delegateModifyPrefs = delegate
+        self.watcher = watcher
+        if let genres = watcher.genres {
+            self.selectedGenres = genres
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -94,12 +99,6 @@ class SelectGenresViewController: UIViewController {
             backgroundImage.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])
         
-        self.view.addSubview(self.progress)
-        NSLayoutConstraint.activate([
-            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
-            ])        
-        
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
             tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
@@ -107,7 +106,14 @@ class SelectGenresViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor)
             ])
-
+        
+        self.view.addSubview(self.progress)
+        NSLayoutConstraint.activate([
+            self.progress.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            ])
+        
+        self.progress.startAnimating()
         apiClient.fetchResource(resource: ResourceType.Genre(.MovieList), resourceClass: Genres.self) { result in
             switch result {
             case .Success(let genres):
@@ -115,17 +121,25 @@ class SelectGenresViewController: UIViewController {
                     self.genres.append(genre)
                 }
                 self.tableView.reloadData()
+                for genre in self.selectedGenres {
+                    if let index = self.genres.index(where: { $0.id == genre.id }) {
+                        let indexPath = IndexPath(row: index, section: 0)
+                        self.tableView.cellForRow(at: indexPath)?.setSelected(true, animated: true)
+                        self.tableView.cellForRow(at: indexPath)?.check()
+                    }
+                }
                 
             case .Failure(let error):
                 print("\(error.localizedDescription)")
             }
+            self.progress.stopAnimating()
         }
     }
     
     func donePressed(sender: UIBarButtonItem) {
-        self.delegateModifyPrefs(nil, self.selectedGenres, nil, self.progress)
+        self.delegateModifyPrefs(nil, self.selectedGenres, nil, self.view)
         
-        let selectActorsController = SelectActorsViewController(delegate: self.delegateModifyPrefs)
+        let selectActorsController = SelectActorsViewController(delegate: self.delegateModifyPrefs, watcher: self.watcher)
         self.navigationController?.pushViewController(selectActorsController, animated: true)
     }
 }
