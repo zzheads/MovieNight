@@ -49,7 +49,14 @@ class ViewResultsController: UIViewController {
         activity.isHidden = true
         activity.translatesAutoresizingMaskIntoConstraints = false
         return activity
-    }()    
+    }()
+    
+    lazy var progressBar: UIProgressView = {
+        let progress = UIProgressView(progressViewStyle: .bar)
+        progress.progressTintColor = AppColors.Blue.color
+        progress.translatesAutoresizingMaskIntoConstraints = false
+        return progress
+    }()
     
     let apiClient = ResourceAPIClient()
     
@@ -82,8 +89,15 @@ class ViewResultsController: UIViewController {
             self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
             ])
         
+        self.view.addSubview(self.progressBar)
+        NSLayoutConstraint.activate([
+            self.progressBar.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin * 5),
+            self.progressBar.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin * 5),
+            self.progressBar.topAnchor.constraint(equalTo: self.progress.bottomAnchor, constant: margin)
+            ])
+        
         self.progress.startAnimating()
-        apiClient.fetchPages(resourceType: ResourceType.Movie(.Popular(pages: 40)), resourceClass: MovieHead.self) { movieHeads in
+        apiClient.fetchPages(resourceType: ResourceType.Movie(.Popular(pages: 40)), resourceClass: MovieHead.self, progress: setProgress(value: )) { movieHeads in
             guard
                 let sorted1 = movieHeads.sortByRating(for: self.watchers[0]),
                 let sorted2 = movieHeads.sortByRating(for: self.watchers[1])
@@ -97,7 +111,12 @@ class ViewResultsController: UIViewController {
             }
             self.tableView.reloadData()
             self.progress.stopAnimating()
+            self.progressBar.isHidden = true
         }
+    }
+    
+    func setProgress(value: Float) {
+        self.progressBar.setProgress(value, animated: true)
     }
 }
 

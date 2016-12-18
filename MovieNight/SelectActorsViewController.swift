@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 fileprivate let cellIdentifier = "cell\(String(describing: SelectActorsViewController.self))"
+fileprivate let margin = CGFloat(12)
 
 class SelectActorsViewController: UIViewController {
     let delegateModifyPrefs: (Weights?, [Genre]?, [Actor]?, UIView) -> Void
@@ -68,6 +69,13 @@ class SelectActorsViewController: UIViewController {
         return activity
     }()
     
+    lazy var progressBar: UIProgressView = {
+        let progress = UIProgressView(progressViewStyle: .bar)
+        progress.progressTintColor = AppColors.Blue.color
+        progress.translatesAutoresizingMaskIntoConstraints = false
+        return progress
+    }()    
+    
     let apiClient = ResourceAPIClient()
     
     init(delegate: @escaping (Weights?, [Genre]?, [Actor]?, UIView) -> Void, watcher: Watcher) {
@@ -113,8 +121,15 @@ class SelectActorsViewController: UIViewController {
             self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
             ])
         
+        self.view.addSubview(self.progressBar)
+        NSLayoutConstraint.activate([
+            self.progressBar.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin * 5),
+            self.progressBar.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -margin * 5),
+            self.progressBar.topAnchor.constraint(equalTo: self.progress.bottomAnchor, constant: margin)
+            ])
+        
         self.progress.startAnimating()
-        apiClient.fetchPages(resourceType: .Person(.Popular(pages: 10)), resourceClass: Actor.self) { actors in
+        apiClient.fetchPages(resourceType: .Person(.Popular(pages: 10)), resourceClass: Actor.self, progress: setProgress(value: )) { actors in
             for actor in actors {
                 self.actors.append(actor)
             }
@@ -127,6 +142,7 @@ class SelectActorsViewController: UIViewController {
                 }
             }
             self.progress.stopAnimating()
+            self.progressBar.isHidden = true
         }
     }
     
@@ -136,6 +152,10 @@ class SelectActorsViewController: UIViewController {
         if let rootViewController = self.navigationController?.popToRootViewController(animated: true)?[0] {
             self.navigationController?.pushViewController(rootViewController, animated: true)
         }
+    }
+    
+    func setProgress(value: Float) {
+        self.progressBar.setProgress(value, animated: true)
     }
 }
 

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 enum ResourceType: Endpoint {
     
@@ -264,7 +265,7 @@ final class ResourceAPIClient: APIClient {
         }, completion: completion)
     }
     
-    func fetchPages<T>(resourceType: ResourceType, resourceClass: T.Type, completion: @escaping ([T]) -> Void) where T: JSONDecodable {
+    func fetchPages<T>(resourceType: ResourceType, resourceClass: T.Type, progress: ((Float) -> Void)? = nil, completion: @escaping ([T]) -> Void) where T: JSONDecodable {
         let apiClient = ResourceAPIClient()
         var pageNumber = 1
         var results: [T] = []
@@ -306,6 +307,9 @@ final class ResourceAPIClient: APIClient {
                         }
                     }
                     print("Fetching \(pageNumber) of \(resourceTypeWithPage) page...")
+                    if let progress = progress {
+                        progress(Float(pageNumber)/Float(maxPages))
+                    }
                     let pagesMax = resourcePage.total_pages > maxPages ? maxPages : resourcePage.total_pages
                     if pageNumber < pagesMax {
                         pageNumber += 1
@@ -334,3 +338,5 @@ final class ResourceAPIClient: APIClient {
         listPage(completion: completion)
     }
 }
+
+
