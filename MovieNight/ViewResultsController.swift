@@ -61,6 +61,13 @@ class ViewResultsController: UIViewController {
         return progress
     }()
     
+    lazy var statusLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let apiClient = ResourceAPIClient()
     
     init(watchers: [Watcher]) {
@@ -92,6 +99,13 @@ class ViewResultsController: UIViewController {
             self.progress.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
             ])
         
+        self.view.addSubview(self.statusLabel)
+        NSLayoutConstraint.activate([
+            self.statusLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.statusLabel.bottomAnchor.constraint(equalTo: self.progress.topAnchor, constant: -margin),
+            self.statusLabel.heightAnchor.constraint(equalToConstant: self.statusLabel.font.lineHeight)
+            ])
+        
         self.view.addSubview(self.progressBar)
         NSLayoutConstraint.activate([
             self.progressBar.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: margin * 5),
@@ -111,12 +125,15 @@ class ViewResultsController: UIViewController {
         }
 
         for i in 0..<self.genresForBoth.count {
+            self.statusLabel.text = "Fetching movies by selected genres..."
             let genre = self.genresForBoth[i]
-            self.apiClient.fetchPages(resourceType: ResourceType.Genre(.Movies(id: genre.id, pages: 10)), resourceClass: MovieHead.self) { movieHeads in
+            self.apiClient.fetchPages(resourceType: ResourceType.Genre(.Movies(id: genre.id, pages: 10)), resourceClass: MovieHead.self, progress: setProgress(value: )) { movieHeads in
                 self.moviesList.append(contentsOf: movieHeads)
                 if (i == self.genresForBoth.count - 1) {
-                    self.apiClient.fetchPages(resourceType: ResourceType.Discover(sort_by: nil, with_cast: self.actorsForBoth.stringWithIds, with_genres: nil, pages: 39), resourceClass: MovieHead.self) { movieHeads in
+                    self.statusLabel.text = "Fetching movies by selected actors..."
+                    self.apiClient.fetchPages(resourceType: ResourceType.Discover(sort_by: nil, with_cast: self.actorsForBoth.stringWithIds, with_genres: nil, pages: 39), resourceClass: MovieHead.self, progress: self.setProgress(value: )) { movieHeads in
                         self.moviesList.append(contentsOf: movieHeads)
+                        self.statusLabel.text = "Sorting, evaluating best matches..."
                         guard
                             let sorted1 = self.moviesList.sortByRating(for: self.watchers[0]),
                             let sorted2 = self.moviesList.sortByRating(for: self.watchers[1])
@@ -127,24 +144,25 @@ class ViewResultsController: UIViewController {
                         
                         if let matchers = self.findIntersectionBest(first: sorted1 as! [MovieHead], second: sorted2 as! [MovieHead], number: 20) {
                             self.results = matchers
-                            for match in matchers {
-                                let id = match.element.id
-                                if let index = self.moviesList.index(where: { $0.id == id }) {
-                                    guard
-                                        let rating1 = self.moviesList.rating(for: self.watchers[0], index: index),
-                                        let rating2 = self.moviesList.rating(for: self.watchers[0], index: index)
-                                        else {
-                                            self.ratings.append((forFirst: -1, forSecond: -1))
-                                            break
-                                    }
-                                    let ratings = (forFirst: rating1, forSecond: rating2)
-                                    self.ratings.append(ratings)
-                                }
-                            }
+//                            for match in matchers {
+//                                let id = match.element.id
+//                                if let index = self.moviesList.index(where: { $0.id == id }) {
+//                                    guard
+//                                        let rating1 = self.moviesList.rating(for: self.watchers[0], index: index),
+//                                        let rating2 = self.moviesList.rating(for: self.watchers[1], index: index)
+//                                        else {
+//                                            self.ratings.append((forFirst: -1, forSecond: -1))
+//                                            break
+//                                    }
+//                                    let ratings = (forFirst: rating1, forSecond: rating2)
+//                                    self.ratings.append(ratings)
+//                                }
+//                            }
                         }
                         self.tableView.reloadData()
                         self.progress.stopAnimating()
                         self.progressBar.isHidden = true
+                        self.statusLabel.isHidden = true
                     }
                 }
             }
@@ -202,7 +220,7 @@ extension ViewResultsController: UITableViewDataSource {
             let cell = UITableViewCell(style: UITableViewCellStyle.value2, reuseIdentifier: cellIdentifier)
             
             let matcher = self.results[indexPath.row]
-            let ratings = self.ratings[indexPath.row]
+//            let ratings = self.ratings[indexPath.row]
             
             var image: UIImageView
             if (indexPath.row % 2 == 0) {
@@ -221,8 +239,8 @@ extension ViewResultsController: UITableViewDataSource {
                 ])
             
             let label = UILabel()
-            label.font = UIFont.boldSystemFont(ofSize: 11)
-            label.text = "\(matcher.element.title) [\(matcher.inFirst) \(matcher.inSecond)]"
+            label.font = UIFont.boldSystemFont(ofSize: 14)
+            label.text = "\(matcher.element.title)"
             label.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(label)
             NSLayoutConstraint.activate([
@@ -236,9 +254,9 @@ extension ViewResultsController: UITableViewDataSource {
                 let year = NSCalendar.current.component(.year, from: date)
                 let labelYear = UILabel()
                 labelYear.textColor = .gray
-                //labelYear.text = "\(year)"
-                labelYear.font = UIFont.boldSystemFont(ofSize: 11)
-                labelYear.text = String.init(format: "%.2f %.2f", ratings.forFirst, ratings.forSecond)
+                labelYear.text = "\(year)"
+                labelYear.font = UIFont.boldSystemFont(ofSize: 14)
+//                labelYear.text = String.init(format: "%.2f %.2f", ratings.forFirst, ratings.forSecond)
                 labelYear.translatesAutoresizingMaskIntoConstraints = false
                 cell.contentView.addSubview(labelYear)
                 NSLayoutConstraint.activate([
